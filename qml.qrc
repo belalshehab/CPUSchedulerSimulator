@@ -1,5 +1,15 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>SchedualrAlgorithms.qml</file>
+        <file>AlgorithmButton.qml</file>
+        <file>QuantaSelctor.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>GrayRectangle.qml</file>
+        <file>ProcessesQueue.qml</file>
+        <file>ProcessDelegate.qml</file>
+        <file>ProccessProperty.qml</file>
+        <file>GantChart.qml</file>
+        <file>ReadyQueue.qml</file>
     </qresource>
 </RCC>

@@ -1,7 +1,6 @@
 #include "process.h"
 #include <sstream>
 #include <string>
-
 Process::Process(unsigned int id, unsigned int arrivalTime, unsigned int duration, unsigned int priority):
     id(id), arrivalTime(arrivalTime), duration(duration), originalDuration(duration), priority(priority), state(State::waiting)
 {}
