@@ -15,7 +15,7 @@ Schedular::Schedular(QObject *parent): QObject{parent},
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(step()));
 
     m_processComparator =  [](const Process &p1, const Process &p2){
-        return p1.m_arrivalTime <= p2.m_arrivalTime;
+        return p1.m_arrivalTime < p2.m_arrivalTime;
     };
 }
 

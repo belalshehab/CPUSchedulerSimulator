@@ -300,6 +300,17 @@ ApplicationWindow {
                 console.log("schedular.step() ", schedular.step())
             }
         }
+
+        Label {
+            id: currentTimeLabel
+            x: 30
+            y: 131
+            width: 61
+            height: 33
+            text: schedular.currentTime
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+        }
     }
 
     ProcessDetails{
