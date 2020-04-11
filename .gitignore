@@ -1,2 +1,7 @@
-*user*
 build*
+*user*
+*autosave*
+*pyc*
+*__*
+*.vscode
+win*
