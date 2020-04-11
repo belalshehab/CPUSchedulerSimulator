@@ -18,15 +18,20 @@ Item {
         id: gantChartView
         anchors.rightMargin: 10
         anchors.leftMargin: 10
+
         orientation: ListView.Horizontal
         flickableDirection: Flickable.HorizontalFlick
 
         anchors.fill: parent
         boundsMovement: Flickable.StopAtBounds
         boundsBehavior: Flickable.StopAtBounds
+
+        spacing: 6
         delegate: gantChartDelegate
 
-        spacing: 10
+        highlightRangeMode: ListView.ApplyRange
+
+        currentIndex: model.count -1
     }
 
     Component{
