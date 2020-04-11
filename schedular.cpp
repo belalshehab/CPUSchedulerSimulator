@@ -10,7 +10,7 @@ Schedular::Schedular(QObject *parent): QObject{parent},
     m_algorithmId{FCFS}, m_preemptive{false}, m_quanta{0},
     m_currentTime(0), m_currentProcess{0, 0, 0, 0},
     m_running{false}, m_paused{false}, m_idle{true},
-    m_isArrivingQueueEmpty(true)
+    m_isArrivingQueueEmpty(true), m_totalWaitingTime{0}, m_averageWaitingTime{0}, m_idleTime{0}
 {
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(step()));
 
@@ -64,6 +64,10 @@ void Schedular::reset()
     m_gantChart.clear();
     setCurrentTime(0);
     setPaused(false);
+
+    m_totalWaitingTime = 0;
+    setAverageWaitingTime(0);
+    setIdleTime(0);
 }
 
 
@@ -99,6 +103,7 @@ bool Schedular::step()
     if(m_currentProcess.m_duration || (!m_readyQueue.empty()))
     {
         setIdle(false);
+
         setCurrentTime(m_currentTime +1);
 
         --m_currentProcess.m_duration;
@@ -107,6 +112,8 @@ bool Schedular::step()
     else if (!m_isArrivingQueueEmpty)
     {
         setIdle(true);
+        setIdleTime(m_idleTime +1);
+
         setCurrentProcess(Process());
 
         if(m_gantChart.last().id != 0)
@@ -169,12 +176,44 @@ void Schedular::stopCurrentProcess()
 
         m_finishedProcesses.push_back(m_currentProcess);
         emit finishedProcessesChanged();
+
+        m_totalWaitingTime += m_currentProcess.m_waitingTime;
+        setAverageWaitingTime(float(m_totalWaitingTime) / m_finishedProcesses.count());
     }
     else
     {
         m_currentProcess.m_state = Process::State::ready;
         emit readyQueueSwap();
     }
+}
+
+unsigned int Schedular::idleTime() const
+{
+    return m_idleTime;
+}
+
+void Schedular::setIdleTime(unsigned int idleTime)
+{
+    if(m_idleTime == idleTime)
+        return;
+
+    m_idleTime = idleTime;
+    emit idleTimeChanged();
+}
+
+float Schedular::averageWaitingTime() const
+{
+    return m_averageWaitingTime;
+}
+
+void Schedular::setAverageWaitingTime(float averageWaitingTime)
+{
+    qDebug() << "averageWaiting " << averageWaitingTime << " " << m_averageWaitingTime;
+    if(m_averageWaitingTime == averageWaitingTime)
+        return;
+
+    m_averageWaitingTime = averageWaitingTime;
+    emit averageWaitingTimeChanged();
 }
 
 bool Schedular::idle() const

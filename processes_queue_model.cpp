@@ -60,6 +60,7 @@ void ProcessesQueueModel::insert(int index, const Process &process)
     m_processes.insert(index, process);
     emit endInsertRows();
 
+    setCount(m_processes.count());
     setIsEmpty(false);
 }
 
@@ -82,6 +83,7 @@ void ProcessesQueueModel::remove(int index)
     m_processes.removeAt(index);
     emit endRemoveRows();
 
+    setCount(m_processes.count());
     setIsEmpty(m_processes.isEmpty());
 }
 
@@ -93,6 +95,7 @@ void ProcessesQueueModel::clear()
     m_processes.clear();
     emit endResetModel();
 
+    setCount(0);
     setIsEmpty(true);
 }
 
@@ -161,6 +164,20 @@ QVariant ProcessesQueueModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> ProcessesQueueModel::roleNames() const
 {
     return m_roleNames;
+}
+
+int ProcessesQueueModel::count() const
+{
+    return m_count;
+}
+
+void ProcessesQueueModel::setCount(int count)
+{
+    if(m_count == count)
+        return;
+
+    m_count = count;
+    emit countChanged();
 }
 
 ProcessesQueueModel::SortingOn ProcessesQueueModel::sortingOn() const

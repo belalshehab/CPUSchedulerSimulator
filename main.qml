@@ -6,9 +6,12 @@ import schedular 0.1
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: height * 16 /9
-    height: 630
+    width: 1050
+    height: 650
+
     title: "CPU schedular"
+
+    property int currentArivingIndex: 0
 
     function enqueue(current = false)
     {
@@ -20,27 +23,44 @@ ApplicationWindow {
             return;
         }
 
-        while(!arrivingQueueModel.isEmpty)
+        //        while(!arrivingQueueModel.isEmpty)
+        while(currentArivingIndex < arrivingQueueModel.count)
         {
-            readyQueueIndex = schedular.enqueueArrivedProccess(arrivingQueueModel.top())
+            var p = arrivingQueueModel.get(currentArivingIndex)
+
+            readyQueueIndex = schedular.enqueueArrivedProccess(p)
             if(readyQueueIndex < 0)
             {
                 break;
             }
 
             //            var color = arrivalQueue.ite
-            var p = arrivingQueueModel.pop()
+            currentArivingIndex++
             readyQueueModel.insert(readyQueueIndex, p)
 
         }
     }
 
+    StatusBox {
+        id: statusBox
+        anchors.horizontalCenterOffset: 0
+        anchors.top: schedualrAlgorithms.bottom
+        anchors.topMargin: 35
+        anchors.horizontalCenter: schedualrAlgorithms.horizontalCenter
+
+        currentTime: schedular.currentTime
+        averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
+        idleTime: schedular.idleTime
+    }
+
     ProcessDelegate {
         id: currentProcessDelegate
-        x: 384
-        y: 464
-        width: 138
+        y: 341
         height: 40
+        anchors.left: parent.left
+        anchors.leftMargin: 370
+        anchors.right: parent.right
+        anchors.rightMargin: 612
         visible: !schedular.idle
 
         selected: true
@@ -50,14 +70,14 @@ ApplicationWindow {
         duration: schedular.currentProcess.duration
         priority: schedular.currentProcess.priority
 
-//        states: State {
-//                name: "add"
-//                PropertyChanges { target: currentProcessDelegate; y: 50 }
-//            }
+        //        states: State {
+        //                name: "add"
+        //                PropertyChanges { target: currentProcessDelegate; y: 50 }
+        //            }
 
-//            transitions: Transition {
-//                PropertyAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
-//            }
+        //            transitions: Transition {
+        //                PropertyAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+        //            }
     }
 
     Schedular{
@@ -67,8 +87,10 @@ ApplicationWindow {
         quanta: schedualrAlgorithms.quanta
 
         algorithmId: schedualrAlgorithms.algorithm
-        isArrivingQueueEmpty: arrivingQueueModel.isEmpty
+        //        isArrivingQueueEmpty: arrivingQueueModel.isEmpty
+        isArrivingQueueEmpty: !(arrivingQueueModel.count - currentArivingIndex)
 
+        onAverageWaitingTimeChanged: console.log("averageWaitingTime ", averageWaitingTime)
         onReadyQueuePoped: {
             readyQueueModel.pop();
         }
@@ -99,6 +121,7 @@ ApplicationWindow {
         onRunningChanged: {
             if(running)
             {
+                currentArivingIndex = 0
                 readyQueueModel.clear()
                 gantChartModel.clear()
                 finishedProcessesModel.clear()
@@ -140,7 +163,6 @@ ApplicationWindow {
     }
 
 
-
     ReadyQueue {
         id: readyQueue
         x: 339
@@ -159,6 +181,7 @@ ApplicationWindow {
         id: schedualrAlgorithms
         x: 19
         y: 63
+        height: 260
 
         enabled: !schedular.running
 
@@ -181,10 +204,12 @@ ApplicationWindow {
 
     GantChart{
         id: gantChart
-        x: 19
         y: 562
-        width: 770
         height: 45
+        anchors.right: controlBox.left
+        anchors.rightMargin: 20
+        anchors.left: parent.left
+        anchors.leftMargin: 20
         model: gantChartModel
     }
 
@@ -193,8 +218,10 @@ ApplicationWindow {
     }
     GantChart {
         id: finishedProcesses
-        y: 413
-        width: 770
+        y: 494
+        anchors.right: gantChart.right
+        anchors.rightMargin: 0
+        anchors.leftMargin: 0
         anchors.left: gantChart.left
 
         clickable: true
@@ -218,10 +245,11 @@ ApplicationWindow {
 
     GrayRectangle {
         id: controlBox
-        x: 827
-        y: 428
+        x: 756
+        y: 453
         width: 245
         height: 180
+        anchors.horizontalCenter: arrivalQueue.horizontalCenter
 
         Slider {
             id: speedSlider
@@ -300,17 +328,6 @@ ApplicationWindow {
                 console.log("schedular.step() ", schedular.step())
             }
         }
-
-        Label {
-            id: currentTimeLabel
-            x: 30
-            y: 131
-            width: 61
-            height: 33
-            text: schedular.currentTime
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-        }
     }
 
     ProcessDetails{
@@ -321,10 +338,12 @@ ApplicationWindow {
     }
 
 
+
 }
 
 /*##^##
 Designer {
-    D{i:10;anchors_x:7}
+    D{i:1;anchors_x:19;anchors_y:93}D{i:2;anchors_width:138;anchors_x:370}D{i:6;anchors_x:7}
+D{i:9;anchors_width:770;anchors_x:19}D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7}
 }
 ##^##*/

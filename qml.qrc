@@ -13,5 +13,6 @@
         <file>ReadyQueue.qml</file>
         <file>DeepLine.qml</file>
         <file>ProcessDetails.qml</file>
+        <file>StatusBox.qml</file>
     </qresource>
 </RCC>

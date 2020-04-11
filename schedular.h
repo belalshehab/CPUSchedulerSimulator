@@ -25,6 +25,9 @@ class Schedular: public QObject
     Q_PROPERTY(bool idle READ idle WRITE setIdle NOTIFY idleChanged)
     Q_PROPERTY(bool isArrivingQueueEmpty READ isArrivingQueueEmpty WRITE setIsArrivingQueueEmpty NOTIFY isArrivingQueueEmptyChanged)
 
+    Q_PROPERTY(float averageWaitingTime READ averageWaitingTime WRITE setAverageWaitingTime NOTIFY averageWaitingTimeChanged)
+    Q_PROPERTY(unsigned int idleTime READ idleTime WRITE setIdleTime NOTIFY idleTimeChanged)
+
 private:
     struct GantChart{
         unsigned int id, time;
@@ -85,6 +88,12 @@ public:
     bool idle() const;
     void setIdle(bool idle);
 
+    float averageWaitingTime() const;
+    void setAverageWaitingTime(float averageWaitingTime);
+
+    unsigned int idleTime() const;
+    void setIdleTime(unsigned int idleTime);
+
 signals:
     void preemptiveChanged();
     void delayChanged();
@@ -102,6 +111,10 @@ signals:
 
     void readyQueuePoped();
     void readyQueueSwap();
+
+    void averageWaitingTimeChanged();
+    void idleTimeChanged();
+
 
 private:
 
@@ -128,6 +141,10 @@ private:
 
     QVector<Process> m_finishedProcesses;
     QVector<GantChart> m_gantChart;
+
+    unsigned int m_totalWaitingTime;
+    float m_averageWaitingTime;
+    unsigned int m_idleTime;
 
     QTimer m_timer;
 };

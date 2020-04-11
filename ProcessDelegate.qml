@@ -32,11 +32,22 @@ Rectangle {
 
     Rectangle{
         id: deleteButton
-        width: 15; height: width
+        width: 20; height: width
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: parent.border.width +1
+
+        color: "transparent"
+
+        Rectangle{
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+
+            height: 4
+            color: "black"
+        }
 
         MouseArea{
             anchors.fill: parent

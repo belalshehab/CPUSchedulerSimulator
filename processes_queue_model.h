@@ -12,6 +12,7 @@ class ProcessesQueueModel : public QAbstractListModel
 
     Q_PROPERTY(SortingOn sortingOn READ sortingOn WRITE setSortingOn NOTIFY sortingOnChanged)
     Q_PROPERTY(bool isEmpty READ isEmpty WRITE setIsEmpty NOTIFY isEmptyChanged)
+    Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
 
     enum RoleNames {
         PidRole = Qt::UserRole,
@@ -50,9 +51,13 @@ public:
     SortingOn sortingOn() const;
     void setSortingOn(SortingOn sortingOn);
 
+    int count() const;
+    void setCount(int count);
+
 signals:
     void sortingOnChanged();
     void isEmptyChanged();
+    void countChanged();
 
 protected:
     virtual QHash<int, QByteArray> roleNames() const override;
@@ -62,6 +67,7 @@ private:
     SortingOn m_sortingOn;
     unsigned int m_lastPid;
     bool m_isEmpty;
+    int m_count;
 };
 
 #endif // ARRIVINGQUEUEMODEL_H
