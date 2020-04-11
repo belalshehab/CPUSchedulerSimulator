@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import schedular 0.1
 
 GrayRectangle {
     id: schedualrAlgorithms
@@ -10,7 +11,22 @@ GrayRectangle {
 
     readonly property alias preemptive: preemptiveCheckBox.checked
     readonly property alias quanta: quantaSelector.value
-    property int algorithm
+    property int algorithm : Schedular.FCFS
+
+    Label {
+        id: label
+
+        anchors.right: schedualrAlgorithms.left
+        anchors.bottom: schedualrAlgorithms.top
+        anchors.left: schedualrAlgorithms.right
+
+        height: 27
+
+        text: qsTr("Schedular Algorithms")
+        font.weight: Font.Bold
+        font.pixelSize: 20
+        horizontalAlignment: Text.AlignHCenter
+    }
 
     ColumnLayout {
         id: buttonsColumn
@@ -19,7 +35,6 @@ GrayRectangle {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.rightMargin: -120
-        anchors.leftMargin: 0
 
         AlgorithmButton {
             id: fcfs
@@ -28,7 +43,7 @@ GrayRectangle {
             onClicked: {
                 preemptiveCheckBox.checked = false
                 preemptiveCheckBox.enabled = false
-                algorithm = 0
+                algorithm = Schedular.FCFS
             }
         }
 
@@ -37,7 +52,7 @@ GrayRectangle {
             text: qsTr("SJF")
             onClicked: {
                 preemptiveCheckBox.enabled = true
-                algorithm = 1
+                algorithm = Schedular.SJF
             }
         }
         AlgorithmButton {
@@ -46,7 +61,7 @@ GrayRectangle {
 
             onClicked: {
                 preemptiveCheckBox.enabled = true
-                algorithm = 2
+                algorithm = Schedular.PRIORITY
             }
         }
         AlgorithmButton {
@@ -57,7 +72,7 @@ GrayRectangle {
             onClicked: {
                 preemptiveCheckBox.checked = true
                 preemptiveCheckBox.enabled = false
-                algorithm = 3
+                algorithm = Schedular.RR
             }
         }
     }
@@ -77,7 +92,6 @@ GrayRectangle {
         }
         enabled: false
     }
-
 
 
     QuantaSelctor {

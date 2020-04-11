@@ -8,52 +8,84 @@ GrayRectangle {
     width: 350
     height: 270
 
+    property alias model: listView.model
+    property int minimumArrivingTime: 0
     property bool dim: false
+
+    Label {
+        id: label3
+
+        anchors.right: root.left
+        anchors.left: root.right
+        anchors.bottom: root.top
+
+
+        height: 30
+        text: qsTr("User Input")
+        horizontalAlignment: Text.AlignHCenter
+        font.weight: Font.Bold
+        font.pixelSize: 20
+    }
+
     ListView {
         id: listView
         width: 158
+        anchors.bottomMargin: 5
         anchors.left: parent.left
-        anchors.bottom: parent.bottom
+        anchors.bottom: clearButton.top
         anchors.top: parent.top
         anchors.margins: 15
         clip: true
-        model: theModel
-
-        spacing: 3
+        spacing: 12
 
         ScrollBar.vertical: ScrollBar{ width: 8}
         delegate: processDelegate
+
+
+        add: Transition {
+            NumberAnimation {
+                properties: "x"; from: listView.width;
+                duration: 150; easing.type: Easing.InCirc
+            }
+            NumberAnimation { properties: "height"; from: 0;
+                duration: 200; easing.type: Easing.InCirc
+            }
+        }
+        remove: Transition {
+            NumberAnimation {
+                properties: "x"; to: listView.width;
+                duration: 150; easing.type: Easing.OutCubic
+            }
+        }
+        removeDisplaced: Transition {
+            SequentialAnimation {
+                PauseAnimation { duration: 150 }
+                NumberAnimation { properties: "y"; duration: 75
+                }
+            }
+        }
     }
 
-    ListModel{
-        id: theModel
-    }
 
     Component {
         id: processDelegate
         ProcessDelegate{
 
-            width: listView.width
+            width: listView.width - 10
             pid: model.pid
             arrivalTime: model.arrivalTime
             duration: model.duration
             priority: model.priority
-            selected: index == listView.currentIndex
-            MouseArea{
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: {
-                    if (mouse.button === Qt.RightButton)
-                        theModel.remove(index)
-                    else
-                        listView.currentIndex = index
-                }
-                onDoubleClicked: {
-                    if (mouse.button === Qt.LeftButton)
-                        colorDialog.open()
-
-                }
+            selected: true
+            onColorClicked: {
+                listView.currentIndex = index
+                colorDialog.open()
             }
+            onLeftClicked: {
+                //                listView.currentItem.selected = false
+                listView.currentIndex = index
+            }
+            onDeleteClicked: arrivingQueueModel.remove(index)
         }
     }
 
@@ -70,6 +102,7 @@ GrayRectangle {
 
         ProccessProperty {
             id: arrivalTime
+            minimumValue: minimumArrivingTime
             name: qsTr("Arrival time")
         }
 
@@ -96,10 +129,9 @@ GrayRectangle {
             font.pixelSize: 12
 
             onClicked: {
-                theModel.append({"pid": theModel.count +1, "arrivalTime": arrivalTime.value, "duration": duration.value, "priority": priority.value})
+                arrivingQueueModel.add(arrivalTime.value, duration.value, priority.value)
             }
         }
-
     }
 
 
@@ -108,12 +140,24 @@ GrayRectangle {
         id: colorDialog
         title: "Please choose a color"
         onAccepted: {
-            console.log("You chose: " + colorDialog.color)
-            Qt.quit()
+            return listView.currentItem.pColor = colorDialog.color
         }
-        onRejected: {
-            console.log("Canceled")
-            Qt.quit()
-        }
+    }
+
+
+    Button{
+        id: clearButton
+
+        anchors.right: listView.right
+        anchors.left: listView.left
+        anchors.bottom: parent.bottom
+
+        height: 48
+
+        text: qsTr("Clear")
+        font.pixelSize: 12
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+        onClicked: listView.model.clear()
     }
 }

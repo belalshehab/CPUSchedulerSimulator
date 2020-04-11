@@ -1,34 +1,134 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import schedular 0.1
+
 
 ApplicationWindow {
     id: applicationWindow
     visible: true
     width: height * 16 /9
     height: 630
+    color: "#131313"
     title: "CPU schedular"
 
-    SchedualrAlgorithms {
-        id: schedualrAlgorithms
-        x: 19
-        y: 63
+    //    var currentIndex = 0
+
+    function enqueue(current = false)
+    {
+        var readyQueueIndex;
+        if(current)
+        {
+            readyQueueIndex = schedular.enqueueArrivedProccess(schedular.currentProcess)
+            console.log("swap readyQueueIndex ", readyQueueIndex, ": ", schedular.currentProcess)
+            readyQueueModel.insert(readyQueueIndex, schedular.currentProcess)
+            return;
+        }
+
+        while(!arrivingQueueModel.isEmpty)
+        {
+            readyQueueIndex = schedular.enqueueArrivedProccess(arrivingQueueModel.top())
+            if(readyQueueIndex < 0)
+            {
+                break;
+            }
+
+            //            var color = arrivalQueue.ite
+            var p = arrivingQueueModel.pop()
+            readyQueueModel.insert(readyQueueIndex, p)
+
+            console.log("readyQueueIndex ", readyQueueIndex)
+        }
     }
 
-    Label {
-        id: label
-        y: 0
-        height: 27
-        text: qsTr("Schedular Algorithms")
-        font.weight: Font.Bold
-        font.pixelSize: 20
-        anchors.rightMargin: 0
-        anchors.leftMargin: 0
-        anchors.bottomMargin: 0
-        anchors.right: schedualrAlgorithms.left
-        anchors.bottom: schedualrAlgorithms.top
-        anchors.left: schedualrAlgorithms.right
-        horizontalAlignment: Text.AlignHCenter
+    ProcessDelegate {
+        id: currentProcessDelegate
+        x: 384
+        y: 464
+        width: 138
+        height: 40
+        visible: !schedular.idle
+
+        selected: true
+
+        pid: schedular.currentProcess.pid
+        arrivalTime: schedular.currentProcess.arrivalTime
+        duration: schedular.currentProcess.duration
+        priority: schedular.currentProcess.priority
+
+//        states: State {
+//                name: "add"
+//                PropertyChanges { target: currentProcessDelegate; y: 50 }
+//            }
+
+//            transitions: Transition {
+//                PropertyAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+//            }
     }
+
+    Schedular{
+        id: schedular
+        delay: speedSlider.value *500
+        preemptive: schedualrAlgorithms.preemptive
+        quanta: schedualrAlgorithms.quanta
+
+        algorithmId: schedualrAlgorithms.algorithm
+        isArrivingQueueEmpty: arrivingQueueModel.isEmpty
+
+        onIsArrivingQueueEmptyChanged: console.log("onIsArrivingQueueEmptyChanged ", isArrivingQueueEmpty)
+        onReadyQueuePoped: {
+            readyQueueModel.pop();
+            //         console.log("readyQueueModel.count: ", readyQueueModel.count())
+            //            readyQueueModel.reset(readyQueue)
+        }
+        onReadyQueueSwap: {
+            enqueue(true);
+        }
+
+        onCurrentTimeChanged: {
+            enqueue()
+            gantChartModel.get(gantChartModel.count -1).width += 20
+        }
+
+        onCurrentProcessChanged:
+        {
+//            PropertyAnimation{target: currentProcessDelegate; property: "y"; from: 0; to: 464; duration: 1000; easing.type: Easing.InOutQuad}
+
+            gantChartModel.append({name: "P" + schedular.currentProcess.pid, width: 0,  time: currentTime,   color: "orange"})
+        }
+        onIdleChanged:
+        {
+            if(idle && running)
+            {
+                gantChartModel.append({name: "" + schedular.currentProcess.pid, width: 0,  time: currentTime,   color: "black"})
+            }
+        }
+        onCurrentProcessDataChanged: {
+            //            currentProcessDelegate.pid = currentProcess.pid
+            currentProcessDelegate.duration = currentProcess.duration
+        }
+
+        onRunningChanged: {
+            if(running)
+            {
+                readyQueueModel.clear()
+                gantChartModel.clear()
+                finishedProcessesModel.clear()
+
+                enqueue()
+            }
+            else
+            {
+                gantChartModel.append({name: "" , width: 5,  time: currentTime,   color: "green"})
+            }
+        }
+
+        onFinishedProcessesChanged: {
+            var x = lastFinishedProcess()
+            finishedProcessesModel.append({name: "P" + x.pid, width: x.originalDuration *20 ,  time: currentTime,   color: "green"})
+        }
+
+    }
+
 
     ProcessesQueue {
         id: arrivalQueue
@@ -36,13 +136,101 @@ ApplicationWindow {
         width: 330
         height: 260
         anchors.top: schedualrAlgorithms.top
-        anchors.topMargin: 0
 
-        dim: schedualrAlgorithms.algorithm != 2
+        dim: schedualrAlgorithms.algorithm != 3
+
+        minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
+        model: arrivingQueueModel
+
+        enabled: !schedular.running
     }
 
+    ProcessesQueueModel{
+        id: arrivingQueueModel
+        sortingOn: ProcessesQueueModel.ARRIVAL
+    }
+
+
+
+    ReadyQueue {
+        id: readyQueue
+        x: 339
+        height: 260
+        anchors.top: schedualrAlgorithms.top
+        model: readyQueueModel
+    }
+
+    ProcessesQueueModel{
+        id: readyQueueModel
+        sortingOn: ProcessesQueueModel.ARRIVAL
+        onSortingOnChanged: console.log(sortingOn)
+    }
+
+
+    SchedualrAlgorithms {
+        id: schedualrAlgorithms
+        x: 19
+        y: 63
+
+        enabled: !schedular.running
+
+
+        onAlgorithmChanged: {
+            switch(schedualrAlgorithms.algorithm)
+            {
+            case Schedular.SJF:
+                readyQueueModel.sortingOn = ProcessesQueueModel.DURATION
+                break;
+            case Schedular.PRIORITY:
+                readyQueueModel.sortingOn = ProcessesQueueModel.PRIORITY
+                break;
+            default:
+                readyQueueModel.sortingOn = ProcessesQueueModel.ARRIVAL
+            }
+        }
+    }
+
+
+    GantChart{
+        id: gantChart
+        x: 19
+        y: 562
+        width: 770
+        height: 45
+        model: gantChartModel
+    }
+
+    ListModel{
+        id: gantChartModel
+        //            ListElement{name: "P1"; width: 50;  time: 0;   color: "red"}
+    }
+    GantChart {
+        id: finishedProcesses
+        y: 413
+        width: 770
+        anchors.left: gantChart.left
+
+        clickable: true
+        model: finishedProcessesModel
+
+        onClick: {
+            processDetails.open()
+            console.log(pid)
+
+            var x = schedular.getFinishedProcess(pid)
+            processDetails.pid = x.pid
+            processDetails.finishedTime = x.finishedTime
+
+        }
+    }
+
+    ListModel{
+        id: finishedProcessesModel
+    }
+
+
     GrayRectangle {
-        id: grayRectangle1
+        id: controlBox
         x: 827
         y: 428
         width: 245
@@ -50,114 +238,95 @@ ApplicationWindow {
 
         Slider {
             id: speedSlider
-            x: 126
-            width: 39
-            value: 0.5
-            stepSize: 0.1
-            orientation: Qt.Vertical
-            //            width: 20
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.rightMargin: 20
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
 
+            orientation: Qt.Vertical
 
-            from: 0.1; to: 1
+            width: 40
 
+            value: 1
+            stepSize: 0.1
+            from: 2; to: 0.1
         }
-
         Button {
-            id: button
-            x: 83
-            y: 28
+            id: startButton
+            x: 107
+            y: 73
             width: 62
             height: 49
             text: qsTr("Start")
+            anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
-                console.log("Algorithm is: ", schedualrAlgorithms.algorithm)
-                console.log("Algorithm is preemptive ? ", schedualrAlgorithms.preemptive)
-                console.log("quanta value: ", schedualrAlgorithms.quanta)
+                //                if(arrivingQueueModel.top().arrivalTime === 0)
+                //                {
+                //                    enqueue()
+                //                }
+                //                else{
+                //                    schedular.currentTime = arrivingQueueModel.top().arrivalTime
+                //                }
+
+                schedular.startSolving()
             }
         }
 
         Button {
-            id: button2
-            x: 83
-            y: 123
+            id: endButton
+            x: 29
+            y: 83
             width: 62
             height: 49
             text: qsTr("End")
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Label {
+            id: label1
+            y: 78
+            width: 50
+            height: 24
+            text: qsTr("Speed")
+            anchors.verticalCenterOffset: 0
+            anchors.left: speedSlider.right
+            anchors.leftMargin: -18
+            anchors.verticalCenter: parent.verticalCenter
+            rotation: 90
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 20
+        }
+
+        Button {
+            id: stepButton
+            x: 107
+            y: 63
+            width: 62
+            height: 49
+            text: qsTr("Step")
+            anchors.verticalCenterOffset: 58
+            anchors.verticalCenter: parent.verticalCenter
+
+            onClicked: {
+                console.log("schedular.step() ", schedular.step())
+            }
         }
     }
 
-    Label {
-        id: label1
-        x: 1028
-        y: 506
-        width: 50
-        height: 24
-        text: qsTr("Speed")
-        rotation: 90
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: 20
+    ProcessDetails{
+        id: processDetails
+        anchors.centerIn: parent
+        width: 400
+        height: 400
     }
 
-    GantChart{
-        x: 19
-        y: 562
-    }
-
-    ReadyQueue {
-        id: readyQueue
-        x: 339
-        width: 162
-        height: 260
-        anchors.top: schedualrAlgorithms.top
-        anchors.topMargin: 0
-    }
-
-    Label {
-        id: label2
-        x: 3
-        y: 30
-        height: 27
-        text: qsTr("Ready Queue")
-        horizontalAlignment: Text.AlignHCenter
-        anchors.bottomMargin: 0
-        font.weight: Font.Bold
-        font.pixelSize: 20
-        anchors.right: readyQueue.left
-        anchors.left: readyQueue.right
-        anchors.rightMargin: 0
-        anchors.leftMargin: 0
-        anchors.bottom: readyQueue.top
-    }
-
-    Label {
-        id: label3
-        x: -8
-        y: 0
-        height: 27
-        text: qsTr("Arrival Queue")
-        horizontalAlignment: Text.AlignHCenter
-        anchors.bottomMargin: 0
-        font.weight: Font.Bold
-        font.pixelSize: 20
-        anchors.right: arrivalQueue.left
-        anchors.left: arrivalQueue.right
-        anchors.rightMargin: 0
-        anchors.leftMargin: 0
-        anchors.bottom: arrivalQueue.top
-    }
 
 }
 
 /*##^##
 Designer {
-    D{i:4;anchors_y:53}D{i:11;anchors_y:63}
+    D{i:10;anchors_x:7}
 }
 ##^##*/

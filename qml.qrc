@@ -11,5 +11,7 @@
         <file>ProccessProperty.qml</file>
         <file>GantChart.qml</file>
         <file>ReadyQueue.qml</file>
+        <file>DeepLine.qml</file>
+        <file>ProcessDetails.qml</file>
     </qresource>
 </RCC>

@@ -6,47 +6,29 @@ Item {
     width: 800
     height: 45
 
-    ListModel{
-        id: gantChartModel
-        ListElement{name: "P1"; width: 50;  time: 0;   color: "red"}
-        ListElement{name: "P2"; width: 20;  time: 50;   color: "black"}
-        ListElement{name: "P3"; width: 111; time: 70;   color: "green"}
-        ListElement{name: "P4"; width: 30;  time: 181;   color: "orange"}
-        ListElement{name: "P5"; width: 70;  time: 211;   color: "blue"}
+    clip: true
+    property alias model: gantChartView.model
 
+    property bool clickable: false
+    property int pid
+    signal click
 
-        ListElement{name: "P1"; width: 50;  time: 0;   color: "red"}
-        ListElement{name: "P2"; width: 20;  time: 50;   color: "black"}
-        ListElement{name: "P3"; width: 111; time: 70;   color: "green"}
-        ListElement{name: "P4"; width: 30;  time: 181;   color: "orange"}
-        ListElement{name: "P5"; width: 70;  time: 211;   color: "blue"}
-        ListElement{name: "P1"; width: 50;  time: 0;   color: "red"}
-        ListElement{name: "P2"; width: 20;  time: 50;   color: "black"}
-        ListElement{name: "P3"; width: 111; time: 70;   color: "green"}
-        ListElement{name: "P4"; width: 30;  time: 181;   color: "orange"}
-        ListElement{name: "P5"; width: 70;  time: 211;   color: "blue"}
-
-
-        ListElement{name: "P1"; width: 50;  time: 0;   color: "red"}
-        ListElement{name: "P2"; width: 20;  time: 50;   color: "black"}
-        ListElement{name: "P3"; width: 111; time: 70;   color: "green"}
-        ListElement{name: "P4"; width: 30;  time: 181;   color: "orange"}
-        ListElement{name: "P5"; width: 70;  time: 211;   color: "blue"}
-
-    }
 
     ListView {
         id: gantChartView
+        anchors.rightMargin: 10
+        anchors.leftMargin: 10
         orientation: ListView.Horizontal
         flickableDirection: Flickable.HorizontalFlick
 
         anchors.fill: parent
         boundsMovement: Flickable.StopAtBounds
         boundsBehavior: Flickable.StopAtBounds
-        model: gantChartModel
+//        model: gantChartModel
         delegate: gantChartDelegate
-        clip: true
+//        clip: true
 
+        spacing: 5
     }
 
     Component{
@@ -62,10 +44,22 @@ Item {
             }
 
             Label{
+                visible: !clickable
                 anchors.top: parent.bottom
                 text: model.time
             }
+            MouseArea{
+                anchors.fill: parent
+                enabled: clickable
+                onClicked: {
+                    pid: index
+                    click()
+                }
+            }
+
+            Behavior on width{NumberAnimation{duration: 200; easing.type: Easing.InOutCubic}}
         }
+
     }
 
 
