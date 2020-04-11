@@ -5,3 +5,5 @@ build*
 *__*
 *.vscode
 win*
+
+*goutput*

@@ -40,7 +40,6 @@ int ProcessesQueueModel::add(const Process &process)
 
      int location = static_cast<int>(index);
 
-
      insert(location, process);
 
      return location;
@@ -48,7 +47,7 @@ int ProcessesQueueModel::add(const Process &process)
 
 int ProcessesQueueModel::add(unsigned int arrivalTime, unsigned int duration, unsigned int priority)
 {
-   Process process(m_lastPid++, arrivalTime, duration, priority);
+   Process process(++m_lastPid, arrivalTime, duration, priority);
    return add(process);
 }
 
@@ -74,7 +73,7 @@ void ProcessesQueueModel::remove(int index)
         m_lastPid = 0;
     }
 
-    else if(m_processes[index].m_pid +1 == m_lastPid)
+    else if(m_processes[index].m_pid == m_lastPid)
     {
         --m_lastPid;
     }
@@ -130,16 +129,6 @@ void ProcessesQueueModel::setIsEmpty(bool value)
 
     m_isEmpty = value;
     emit isEmptyChanged();
-}
-
-void ProcessesQueueModel::reset(QVariant variant)
-{
-    QList<QVariant> l = variant.toList();
-
-//    variant.value<QVector<Process>()
-//    beginResetModel();
-//    m_processes = processes;
-//    endResetModel();
 }
 
 int ProcessesQueueModel::rowCount(const QModelIndex &parent) const

@@ -24,11 +24,9 @@ Item {
         anchors.fill: parent
         boundsMovement: Flickable.StopAtBounds
         boundsBehavior: Flickable.StopAtBounds
-//        model: gantChartModel
         delegate: gantChartDelegate
-//        clip: true
 
-        spacing: 5
+        spacing: 10
     }
 
     Component{

@@ -8,7 +8,7 @@
 
 Schedular::Schedular(QObject *parent): QObject{parent},
     m_algorithmId{FCFS}, m_preemptive{false}, m_quanta{0},
-    m_currentTime(0), m_currentProcess{5456, 0, 0, 0},
+    m_currentTime(0), m_currentProcess{0, 0, 0, 0},
     m_running{false}, m_paused{false}, m_idle{true},
     m_isArrivingQueueEmpty(true)
 {
@@ -25,6 +25,13 @@ int Schedular::enqueueArrivedProccess(const Process &process)
     {
         return -1;
     }
+
+    if(process.m_pid == m_currentProcess.m_pid)
+    {
+        m_readyQueue.insert(1, process);
+        return 1;
+    }
+
     std::vector<Process>::reverse_iterator itr;
 
     long long index = 0;
@@ -47,7 +54,6 @@ int Schedular::enqueueArrivedProccess(const Process &process)
     }
 
     m_readyQueue.insert(static_cast<int>(index), process);
-    emit readyQueueChanged();
     return index;
 }
 
@@ -63,13 +69,6 @@ void Schedular::reset()
 
 void Schedular::startSolving()
 {
-    //    m_currentTime = m_arrivingQueue.top().arrivalTime;
-//    m_currentTime = 0;
-    //    enqueueArrivedProccess();
-
-//    setRunning(true);
-//    runReadyProcess();
-
     m_timer.start(m_delay);
 }
 
@@ -108,6 +107,14 @@ bool Schedular::step()
     else if (!m_isArrivingQueueEmpty)
     {
         setIdle(true);
+        setCurrentProcess(Process());
+
+        if(m_gantChart.last().id != 0)
+        {
+            m_gantChart.push_back({m_currentProcess.m_pid, m_currentTime});
+            emit gantChartChanged();
+        }
+
         setCurrentTime(m_currentTime +1);
     }
     else
@@ -144,18 +151,16 @@ void Schedular::runReadyProcess()
 
     m_gantChart.push_back({m_currentProcess.m_pid, m_currentTime});
     emit gantChartChanged();
-
-//    emit currentProcessChanged();
 }
 
 void Schedular::stopCurrentProcess()
 {
-    if(m_currentProcess.m_duration == 0 )
+    if(m_currentProcess.m_pid == 0)
     {
-        if(!m_finishedProcesses.empty() && m_finishedProcesses.last().m_pid == m_currentProcess.m_pid)
-        {
-            return;
-        }
+        return;
+    }
+    if(m_currentProcess.m_duration == 0)
+    {
         m_currentProcess.m_finishedTime = m_currentTime;
         m_currentProcess.m_state = Process::State::finished;
         m_currentProcess.m_turnaroundTime = m_currentProcess.m_finishedTime - m_currentProcess.m_arrivalTime;
@@ -164,13 +169,10 @@ void Schedular::stopCurrentProcess()
 
         m_finishedProcesses.push_back(m_currentProcess);
         emit finishedProcessesChanged();
-
-//        emit currentProcessDataChanged();
     }
     else
     {
         m_currentProcess.m_state = Process::State::ready;
-//        enqueueArrivedProccess(m_currentProcess);
         emit readyQueueSwap();
     }
 }
@@ -204,13 +206,6 @@ Process Schedular::lastFinishedProcess() const
    return m_finishedProcesses.last();
 }
 
-
-
-//void Schedular::setReadyQueue(const QVariant &readyQueue)
-//{
-//    readyQueue.toList();
-//    m_readyQueue = readyQueue<Process>.toList().toVector();
-//}
 
 bool Schedular::isArrivingQueueEmpty() const
 {
@@ -259,11 +254,13 @@ void Schedular::setAlgorithmId(AlgorithmId algorithmId)
             return p1.m_duration < p2.m_duration;
         };
         break;
+
     case PRIORITY:
         m_processComparator =  [](const Process &p1, const Process &p2){
             return p1.m_priority < p2.m_priority;
         };
         break;
+
     default:
         m_processComparator =  [](const Process &p1, const Process &p2){
             return p1.m_arrivalTime < p2.m_arrivalTime;
@@ -297,7 +294,6 @@ void Schedular::setCurrentProcess(const Process &currentProcess)
         return;
     }
 
-    qDebug() << "old: " << m_currentProcess.m_pid << ", new: " << currentProcess.m_pid;
     m_currentProcess = currentProcess;
     emit currentProcessChanged();
     emit currentProcessDataChanged();
@@ -372,5 +368,3 @@ QVector<Process> Schedular::finishedProcesses() const
 {
     return m_finishedProcesses;
 }
-
-

@@ -39,8 +39,6 @@ public:
     Q_INVOKABLE bool isEmpty();
     void setIsEmpty(bool value);
 
-    Q_INVOKABLE void reset(QVariant variant);
-
 public:
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

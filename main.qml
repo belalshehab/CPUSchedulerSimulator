@@ -8,10 +8,7 @@ ApplicationWindow {
     visible: true
     width: height * 16 /9
     height: 630
-    color: "#131313"
     title: "CPU schedular"
-
-    //    var currentIndex = 0
 
     function enqueue(current = false)
     {
@@ -19,7 +16,6 @@ ApplicationWindow {
         if(current)
         {
             readyQueueIndex = schedular.enqueueArrivedProccess(schedular.currentProcess)
-            console.log("swap readyQueueIndex ", readyQueueIndex, ": ", schedular.currentProcess)
             readyQueueModel.insert(readyQueueIndex, schedular.currentProcess)
             return;
         }
@@ -36,7 +32,6 @@ ApplicationWindow {
             var p = arrivingQueueModel.pop()
             readyQueueModel.insert(readyQueueIndex, p)
 
-            console.log("readyQueueIndex ", readyQueueIndex)
         }
     }
 
@@ -74,11 +69,8 @@ ApplicationWindow {
         algorithmId: schedualrAlgorithms.algorithm
         isArrivingQueueEmpty: arrivingQueueModel.isEmpty
 
-        onIsArrivingQueueEmptyChanged: console.log("onIsArrivingQueueEmptyChanged ", isArrivingQueueEmpty)
         onReadyQueuePoped: {
             readyQueueModel.pop();
-            //         console.log("readyQueueModel.count: ", readyQueueModel.count())
-            //            readyQueueModel.reset(readyQueue)
         }
         onReadyQueueSwap: {
             enqueue(true);
@@ -89,21 +81,18 @@ ApplicationWindow {
             gantChartModel.get(gantChartModel.count -1).width += 20
         }
 
-        onCurrentProcessChanged:
-        {
-//            PropertyAnimation{target: currentProcessDelegate; property: "y"; from: 0; to: 464; duration: 1000; easing.type: Easing.InOutQuad}
-
-            gantChartModel.append({name: "P" + schedular.currentProcess.pid, width: 0,  time: currentTime,   color: "orange"})
-        }
-        onIdleChanged:
-        {
-            if(idle && running)
+        onGantChartChanged: {
+            if(currentProcess.pid === 0)
             {
-                gantChartModel.append({name: "" + schedular.currentProcess.pid, width: 0,  time: currentTime,   color: "black"})
+                gantChartModel.append({name: "", width: 0,  time: currentTime,   color: "black"})
+            }
+            else
+            {
+                gantChartModel.append({name: "P" + schedular.currentProcess.pid, width: 0,  time: currentTime,   color: "orange"})
             }
         }
+
         onCurrentProcessDataChanged: {
-            //            currentProcessDelegate.pid = currentProcess.pid
             currentProcessDelegate.duration = currentProcess.duration
         }
 
@@ -163,7 +152,6 @@ ApplicationWindow {
     ProcessesQueueModel{
         id: readyQueueModel
         sortingOn: ProcessesQueueModel.ARRIVAL
-        onSortingOnChanged: console.log(sortingOn)
     }
 
 
@@ -202,7 +190,6 @@ ApplicationWindow {
 
     ListModel{
         id: gantChartModel
-        //            ListElement{name: "P1"; width: 50;  time: 0;   color: "red"}
     }
     GantChart {
         id: finishedProcesses

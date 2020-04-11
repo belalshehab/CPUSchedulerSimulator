@@ -24,10 +24,6 @@ class Schedular: public QObject
     Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
     Q_PROPERTY(bool idle READ idle WRITE setIdle NOTIFY idleChanged)
     Q_PROPERTY(bool isArrivingQueueEmpty READ isArrivingQueueEmpty WRITE setIsArrivingQueueEmpty NOTIFY isArrivingQueueEmptyChanged)
-    Q_PROPERTY(QVariant readyQueue READ readyQueue NOTIFY readyQueueChanged)
-//    Q_PROPERTY(int readyQueueSize READ readyQueueSize WRITE setReadyQueueSize NOTIFY readyQueueSizeChanged)
-
-
 
 private:
     struct GantChart{
@@ -41,9 +37,10 @@ public:
     };
 public:
     explicit Schedular(QObject *parent = nullptr);
-    //    void insertProcess(const Process &process);
-    Q_INVOKABLE void startSolving();
+
     void solve();
+
+    Q_INVOKABLE void startSolving();
     Q_INVOKABLE bool step();
     Q_INVOKABLE int enqueueArrivedProccess(const Process &process);
     Q_INVOKABLE void reset();
@@ -84,8 +81,6 @@ public:
 
     Q_INVOKABLE Process getFinishedProcess(int index) const;
     Q_INVOKABLE Process lastFinishedProcess() const;
-//    Q_INVOKABLE GantChart lastGantChanr() const;
-//    void setReadyQueue(const QVariant &readyQueue);
 
     bool idle() const;
     void setIdle(bool idle);
@@ -102,7 +97,6 @@ signals:
     void runningChanged();
     void idleChanged();
     void isArrivingQueueEmptyChanged();
-    void readyQueueChanged();
     void gantChartChanged();
     void finishedProcessesChanged();
 

@@ -41,8 +41,8 @@ public:
     unsigned int m_turnaroundTime;
 
     State m_state;
-
-
 };
+
 Q_DECLARE_METATYPE(Process)
+
 #endif // PROCESS_H
