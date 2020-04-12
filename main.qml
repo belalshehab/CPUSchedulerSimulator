@@ -1,5 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
+
 import schedular 0.1
 
 
@@ -7,7 +9,7 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: 1050
-    height: 650
+    height: 800
 
     title: "CPU schedular"
 
@@ -43,13 +45,18 @@ ApplicationWindow {
 
     StatusBox {
         id: statusBox
+        y: 440
+        width: 245
+        height: 180
+        anchors.bottom: controlBox.top
+        anchors.bottomMargin: 30
         anchors.horizontalCenterOffset: 0
-        anchors.top: schedualrAlgorithms.bottom
-        anchors.topMargin: 35
-        anchors.horizontalCenter: schedualrAlgorithms.horizontalCenter
+        anchors.horizontalCenter: controlBox.horizontalCenter
 
-        currentTime: schedular.currentTime
+        averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
+        averageResponseTime: Math.round(schedular.averageResponseTime *100) /100
         averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
+
         idleTime: schedular.idleTime
     }
 
@@ -206,6 +213,8 @@ ApplicationWindow {
         id: gantChart
         y: 562
         height: 45
+        anchors.bottom: controlBox.bottom
+        anchors.bottomMargin: 10
         anchors.right: controlBox.left
         anchors.rightMargin: 20
         anchors.left: parent.left
@@ -218,7 +227,8 @@ ApplicationWindow {
     }
     GantChart {
         id: finishedProcesses
-        y: 494
+        anchors.top: controlBox.top
+        anchors.topMargin: 20
         anchors.right: gantChart.right
         anchors.rightMargin: 0
         anchors.leftMargin: 0
@@ -249,6 +259,8 @@ ApplicationWindow {
         y: 453
         width: 245
         height: 180
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 30
         anchors.horizontalCenter: arrivalQueue.horizontalCenter
 
         Slider {
@@ -276,13 +288,6 @@ ApplicationWindow {
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
-                //                if(arrivingQueueModel.top().arrivalTime === 0)
-                //                {
-                //                    enqueue()
-                //                }
-                //                else{
-                //                    schedular.currentTime = arrivingQueueModel.top().arrivalTime
-                //                }
 
                 schedular.startSolving()
             }
@@ -328,6 +333,42 @@ ApplicationWindow {
                 console.log("schedular.step() ", schedular.step())
             }
         }
+
+        RowLayout{
+            height: 44
+            anchors.right: parent.right
+            anchors.rightMargin: 65
+            anchors.left: parent.left
+            anchors.leftMargin: 15
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Label {
+                id: turnaroundTimeLabel
+                x: 15
+                y: 19
+                width: 61
+                height: 33
+                text: schedular.currentTime
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            Label {
+                x: 139
+                y: 25
+                width: 97
+                height: 32
+                text: qsTr("Current Time")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
     }
 
     ProcessDetails{
@@ -344,6 +385,7 @@ ApplicationWindow {
 /*##^##
 Designer {
     D{i:1;anchors_x:19;anchors_y:93}D{i:2;anchors_width:138;anchors_x:370}D{i:6;anchors_x:7}
-D{i:9;anchors_width:770;anchors_x:19}D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7}
+D{i:9;anchors_width:770;anchors_x:19}D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}
+D{i:19;anchors_width:179}
 }
 ##^##*/

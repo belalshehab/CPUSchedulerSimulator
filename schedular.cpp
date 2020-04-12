@@ -74,7 +74,12 @@ void Schedular::reset()
     setPaused(false);
 
     m_totalWaitingTime = 0;
+    m_totalResponseTime = 0;
+    m_totalTurnaroundTime = 0;
+
     setAverageWaitingTime(0);
+    setAverageResponseTime(0);
+    setAverageTurnaroundTime(0);
     setIdleTime(0);
 
     m_currentQuanta = m_quanta;
@@ -206,12 +211,46 @@ void Schedular::stopCurrentProcess()
 
         m_totalWaitingTime += m_currentProcess.m_waitingTime;
         setAverageWaitingTime(float(m_totalWaitingTime) / m_finishedProcesses.count());
+
+        m_totalResponseTime += m_currentProcess.m_responseTime;
+        setAverageResponseTime(float(m_totalResponseTime) / m_finishedProcesses.count());
+
+        m_totalTurnaroundTime += m_currentProcess.m_turnaroundTime;
+        setAverageTurnaroundTime(float(m_totalTurnaroundTime) / m_finishedProcesses.count());
     }
     else
     {
         m_currentProcess.m_state = Process::State::ready;
         emit readyQueueSwap();
     }
+}
+
+float Schedular::averageResponseTime() const
+{
+    return m_averageResponseTime;
+}
+
+void Schedular::setAverageResponseTime(float averageResponseTime)
+{
+    if(m_averageResponseTime == averageResponseTime)
+        return;
+
+    m_averageResponseTime = averageResponseTime;
+    emit averageResponseTimeChanged();
+}
+
+float Schedular::averageTurnaroundTime() const
+{
+    return m_averageTurnaroundTime;
+}
+
+void Schedular::setAverageTurnaroundTime(float averageTurnaroundTime)
+{
+    if(m_averageTurnaroundTime == averageTurnaroundTime)
+        return;
+
+    m_averageTurnaroundTime = averageTurnaroundTime;
+    emit averageTurnaroundTimeChanged();
 }
 
 unsigned int Schedular::idleTime() const

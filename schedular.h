@@ -26,6 +26,8 @@ class Schedular: public QObject
     Q_PROPERTY(bool isArrivingQueueEmpty READ isArrivingQueueEmpty WRITE setIsArrivingQueueEmpty NOTIFY isArrivingQueueEmptyChanged)
 
     Q_PROPERTY(float averageWaitingTime READ averageWaitingTime WRITE setAverageWaitingTime NOTIFY averageWaitingTimeChanged)
+    Q_PROPERTY(float averageTurnaroundTime READ averageTurnaroundTime WRITE setAverageTurnaroundTime NOTIFY averageTurnaroundTimeChanged)
+    Q_PROPERTY(float averageResponseTime READ averageResponseTime WRITE setAverageResponseTime NOTIFY averageResponseTimeChanged)
     Q_PROPERTY(unsigned int idleTime READ idleTime WRITE setIdleTime NOTIFY idleTimeChanged)
 
 private:
@@ -91,6 +93,12 @@ public:
     float averageWaitingTime() const;
     void setAverageWaitingTime(float averageWaitingTime);
 
+    float averageTurnaroundTime() const;
+    void setAverageTurnaroundTime(float averageTurnaroundTime);
+
+    float averageResponseTime() const;
+    void setAverageResponseTime(float averageResponseTime);
+
     unsigned int idleTime() const;
     void setIdleTime(unsigned int idleTime);
 
@@ -113,6 +121,9 @@ signals:
     void readyQueueSwap();
 
     void averageWaitingTimeChanged();
+    void averageTurnaroundTimeChanged();
+    void averageResponseTimeChanged();
+
     void idleTimeChanged();
 
 
@@ -145,6 +156,13 @@ private:
 
     unsigned int m_totalWaitingTime;
     float m_averageWaitingTime;
+
+    unsigned int m_totalTurnaroundTime;
+    float m_averageTurnaroundTime;
+
+    unsigned int m_totalResponseTime;
+    float m_averageResponseTime;
+
     unsigned int m_idleTime;
 
     QTimer m_timer;

@@ -5,11 +5,12 @@ import QtQuick.Layouts 1.12
 
 GrayRectangle {
     id: root
-    width: 200
-    height: 100
+    width: 245
+    height: 180
     
-    property alias currentTime: currentTimeLabel.text
+    property alias averageTurnaroundTime: turnaroundTimeLabel.text
     property alias averageWaitingTime: averageWaitingTimeLabel.text
+    property alias averageResponseTime: responseTimeLabel.text
     property alias idleTime: idleTimeLabel.text
 
     Label {
@@ -27,13 +28,13 @@ GrayRectangle {
 
     ColumnLayout{
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.margins: 15
         RowLayout{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Label {
-                id: currentTimeLabel
+                id: turnaroundTimeLabel
                 x: 15
                 y: 19
                 width: 61
@@ -51,7 +52,7 @@ GrayRectangle {
                 y: 25
                 width: 97
                 height: 32
-                text: qsTr("Current time")
+                text: qsTr("Average Turnaround Time")
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -83,7 +84,39 @@ GrayRectangle {
                 y: 25
                 width: 97
                 height: 32
-                text: qsTr("Average waiting time")
+                text: qsTr("Average Waiting Time")
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
+
+        RowLayout{
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Label {
+                id: responseTimeLabel
+                x: 20
+                y: 90
+                width: 61
+                height: 33
+                text: qsTr("0")
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            Label {
+                id: label3
+                x: 139
+                y: 25
+                width: 97
+                height: 32
+                text: qsTr("Average Response Time")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -110,12 +143,12 @@ GrayRectangle {
             }
 
             Label {
-                id: label3
+                id: label4
                 x: 139
                 y: 25
                 width: 97
                 height: 32
-                text: qsTr("CPU idle Time")
+                text: qsTr("CPU Idle Time")
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.fillHeight: true
                 Layout.fillWidth: true
