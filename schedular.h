@@ -128,6 +128,7 @@ private:
     AlgorithmId m_algorithmId;
     bool m_preemptive;
     int m_quanta;
+    int m_currentQuanta;
 
     unsigned int m_currentTime;
     Process m_currentProcess;

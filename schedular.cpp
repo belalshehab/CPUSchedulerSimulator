@@ -28,8 +28,16 @@ int Schedular::enqueueArrivedProccess(const Process &process)
 
     if(process.m_pid == m_currentProcess.m_pid)
     {
-        m_readyQueue.insert(1, process);
-        return 1;
+        if(m_algorithmId == AlgorithmId::RR)
+        {
+            m_readyQueue.insert(m_readyQueue.count(), process);
+            return m_readyQueue.count() -1;
+        }
+        else
+        {
+            m_readyQueue.insert(1, process);
+            return 1;
+        }
     }
 
     std::vector<Process>::reverse_iterator itr;
@@ -68,6 +76,8 @@ void Schedular::reset()
     m_totalWaitingTime = 0;
     setAverageWaitingTime(0);
     setIdleTime(0);
+
+    m_currentQuanta = m_quanta;
 }
 
 
@@ -107,7 +117,9 @@ bool Schedular::step()
         setCurrentTime(m_currentTime +1);
 
         --m_currentProcess.m_duration;
-        emit currentProcessDataChanged();        
+        emit currentProcessDataChanged();
+
+        --m_currentQuanta;
     }
     else if (!m_isArrivingQueueEmpty)
     {
@@ -132,10 +144,23 @@ bool Schedular::step()
         return false;
     }
 
-    if(m_currentProcess.m_duration == 0 || (m_preemptive && (m_readyQueue.empty() ? false : m_processComparator(m_readyQueue.first(), m_currentProcess))))
+    if(m_currentProcess.m_duration == 0 || (m_algorithmId != AlgorithmId::RR && m_preemptive && (m_readyQueue.empty() ? false : m_processComparator(m_readyQueue.first(), m_currentProcess))))
     {
         stopCurrentProcess();
         runReadyProcess();
+    }
+
+    else if(m_algorithmId == AlgorithmId::RR && m_currentQuanta == 0)
+    {
+        if(m_readyQueue.empty())
+        {
+            m_currentQuanta = m_quanta;
+        }
+        else
+        {
+            stopCurrentProcess();
+            runReadyProcess();
+        }
     }
     return true;
 }
@@ -158,6 +183,8 @@ void Schedular::runReadyProcess()
 
     m_gantChart.push_back({m_currentProcess.m_pid, m_currentTime});
     emit gantChartChanged();
+
+    m_currentQuanta = m_quanta;
 }
 
 void Schedular::stopCurrentProcess()
