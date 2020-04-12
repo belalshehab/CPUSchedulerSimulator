@@ -10,7 +10,7 @@ Item {
     property alias model: gantChartView.model
 
     property bool clickable: false
-    property int pid
+    property int index
     signal click
 
 
@@ -55,7 +55,8 @@ Item {
                 anchors.fill: parent
                 enabled: clickable
                 onClicked: {
-                    pid: index
+                    console.log("clicked ", index)
+                    root.index = index
                     click()
                 }
             }

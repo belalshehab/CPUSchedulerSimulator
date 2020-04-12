@@ -30,11 +30,9 @@ GrayRectangle {
 
     ColumnLayout {
         id: buttonsColumn
-        anchors.right: parent.left
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.rightMargin: -120
 
         AlgorithmButton {
             id: fcfs

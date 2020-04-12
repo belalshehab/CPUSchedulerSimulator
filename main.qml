@@ -251,23 +251,26 @@ ApplicationWindow {
     GantChart {
         id: finishedProcesses
         anchors.top: controlBox.top
-        anchors.topMargin: 20
-        anchors.right: gantChart.right
-        anchors.rightMargin: 0
-        anchors.leftMargin: 0
+        anchors.right: gantChart.righ
         anchors.left: gantChart.left
+        anchors.topMargin: 20
 
         clickable: true
         model: finishedProcessesModel
 
         onClick: {
             processDetails.open()
-            console.log(pid)
 
-            var x = schedular.getFinishedProcess(pid)
-            processDetails.pid = x.pid
-            processDetails.finishedTime = x.finishedTime
-
+            var process = schedular.getFinishedProcess(index)
+            processDetails.pid = "Process " + process.pid
+            processDetails.arrivalTime = process.arrivalTime
+            processDetails.duration = process.originalDuration
+            processDetails.priority = process.priority
+            processDetails.startedTime = process.startedTime
+            processDetails.finishedTime = process.finishedTime
+            processDetails.waitingTime = process.waitingTime
+            processDetails.responseTime = process.responseTime
+            processDetails.turnaroundTime = process.turnaroundTime
         }
     }
 

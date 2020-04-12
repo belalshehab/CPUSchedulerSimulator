@@ -10,7 +10,8 @@ Schedular::Schedular(QObject *parent): QObject{parent},
     m_algorithmId{FCFS}, m_preemptive{false}, m_quanta{0},
     m_currentTime(0), m_currentProcess{0, 0, 0, 0},
     m_running{false}, m_paused{false}, m_idle{true},
-    m_isArrivingQueueEmpty(true), m_totalWaitingTime{0}, m_averageWaitingTime{0}, m_idleTime{0}
+    m_isArrivingQueueEmpty(true), m_totalWaitingTime{0}, m_averageWaitingTime{0}, m_totalTurnaroundTime{0}, m_averageTurnaroundTime{0},
+    m_totalResponseTime{0}, m_averageResponseTime{0}, m_idleTime{0}
 {
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(step()));
 
