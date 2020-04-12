@@ -26,7 +26,7 @@ Item {
         boundsMovement: Flickable.StopAtBounds
         boundsBehavior: Flickable.StopAtBounds
 
-        spacing: 6
+        spacing: 4
         delegate: gantChartDelegate
 
         highlightRangeMode: ListView.ApplyRange

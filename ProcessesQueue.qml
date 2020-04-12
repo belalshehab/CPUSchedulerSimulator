@@ -70,13 +70,13 @@ GrayRectangle {
     Component {
         id: processDelegate
         ProcessDelegate{
-
             width: listView.width - 10
             pid: model.pid
             arrivalTime: model.arrivalTime
             duration: model.duration
             priority: model.priority
             selected: true
+            removable: true
             onColorClicked: {
                 listView.currentIndex = index
                 colorDialog.open()

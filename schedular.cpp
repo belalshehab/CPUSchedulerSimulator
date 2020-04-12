@@ -274,7 +274,6 @@ float Schedular::averageWaitingTime() const
 
 void Schedular::setAverageWaitingTime(float averageWaitingTime)
 {
-    qDebug() << "averageWaiting " << averageWaitingTime << " " << m_averageWaitingTime;
     if(m_averageWaitingTime == averageWaitingTime)
         return;
 
@@ -445,7 +444,6 @@ void Schedular::setDelay(int delay)
     m_delay = delay;
 
     m_timer.setInterval(m_delay);
-    qDebug() << m_delay;
 
     emit delayChanged();
 }

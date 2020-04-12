@@ -11,6 +11,8 @@ ApplicationWindow {
     width: 1050
     height: 800
 
+//    color: "#ff00ff"
+
     title: "CPU schedular"
 
     property int currentArivingIndex: 0
@@ -94,10 +96,8 @@ ApplicationWindow {
         quanta: schedualrAlgorithms.quanta
 
         algorithmId: schedualrAlgorithms.algorithm
-        //        isArrivingQueueEmpty: arrivingQueueModel.isEmpty
         isArrivingQueueEmpty: !(arrivingQueueModel.count - currentArivingIndex)
 
-        onAverageWaitingTimeChanged: console.log("averageWaitingTime ", averageWaitingTime)
         onReadyQueuePoped: {
             readyQueueModel.pop();
         }
@@ -113,7 +113,7 @@ ApplicationWindow {
         onGantChartChanged: {
             if(currentProcess.pid === 0)
             {
-                gantChartModel.append({name: "", width: 0,  time: currentTime,   color: "black"})
+                gantChartModel.append({name: "", width: 0,  time: currentTime,   color: "transparent"})
             }
             else
             {
@@ -208,7 +208,17 @@ ApplicationWindow {
         }
     }
 
+    Label {
+        anchors.left: gantChart.left
+        anchors.bottom: gantChart.top
+        anchors.bottomMargin: 5
+        height: 30
 
+        text: qsTr("Gant Chart")
+        horizontalAlignment: Text.AlignHCenter
+        font.weight: Font.Bold
+        font.pixelSize: 20
+    }
     GantChart{
         id: gantChart
         y: 562
@@ -224,6 +234,19 @@ ApplicationWindow {
 
     ListModel{
         id: gantChartModel
+    }
+
+    Label {
+        anchors.left: finishedProcesses.left
+        anchors.bottom: finishedProcesses.top
+        anchors.bottomMargin: 5
+
+        height: 30
+
+        text: qsTr("Finished Processes")
+        horizontalAlignment: Text.AlignHCenter
+        font.weight: Font.Bold
+        font.pixelSize: 20
     }
     GantChart {
         id: finishedProcesses
@@ -330,7 +353,7 @@ ApplicationWindow {
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
-                console.log("schedular.step() ", schedular.step())
+                schedular.step()
             }
         }
 

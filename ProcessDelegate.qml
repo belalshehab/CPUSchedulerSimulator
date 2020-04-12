@@ -9,6 +9,8 @@ Rectangle {
     property int duration
     property int priority
 
+    property bool removable: false
+
     property bool selected : false
 
     property alias pColor: colorRec.color
@@ -32,11 +34,15 @@ Rectangle {
 
     Rectangle{
         id: deleteButton
-        width: 20; height: width
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: parent.border.width +1
+
+        width: removable ? 15 : 0
+        height: width
+
+        visible: removable
 
         color: "transparent"
 
