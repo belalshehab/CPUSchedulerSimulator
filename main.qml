@@ -8,10 +8,11 @@ import schedular 0.1
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: 1050
-    height: 800
+    width: 1200
+    height: 720
 
-//    color: "#ff00ff"
+
+    color: "#000000"
 
     title: "CPU schedular"
 
@@ -47,12 +48,10 @@ ApplicationWindow {
 
     StatusBox {
         id: statusBox
-        y: 440
+        y: 401
         width: 245
         height: 180
-        anchors.bottom: controlBox.top
-        anchors.bottomMargin: 30
-        anchors.horizontalCenterOffset: 0
+        anchors.horizontalCenterOffset: -407
         anchors.horizontalCenter: controlBox.horizontalCenter
 
         averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
@@ -64,12 +63,12 @@ ApplicationWindow {
 
     ProcessDelegate {
         id: currentProcessDelegate
-        y: 341
-        height: 40
+        y: 601
+        height: 48
         anchors.left: parent.left
-        anchors.leftMargin: 370
+        anchors.leftMargin: 748
         anchors.right: parent.right
-        anchors.rightMargin: 612
+        anchors.rightMargin: 172
         visible: !schedular.idle
 
         selected: true
@@ -151,10 +150,10 @@ ApplicationWindow {
 
     ProcessesQueue {
         id: arrivalQueue
-        x: 671
+        x: 714
+        y: 192
         width: 330
         height: 260
-        anchors.top: schedualrAlgorithms.top
 
         dim: schedualrAlgorithms.algorithm != 3
 
@@ -172,9 +171,9 @@ ApplicationWindow {
 
     ReadyQueue {
         id: readyQueue
-        x: 339
+        x: 288
+        y: 135
         height: 260
-        anchors.top: schedualrAlgorithms.top
         model: readyQueueModel
     }
 
@@ -186,9 +185,13 @@ ApplicationWindow {
 
     SchedualrAlgorithms {
         id: schedualrAlgorithms
-        x: 19
-        y: 63
-        height: 260
+        height: 70
+        anchors.top: parent.top
+        anchors.topMargin: 30
+        anchors.left: parent.left
+        anchors.leftMargin: 50
+        anchors.right: parent.right
+        anchors.rightMargin: 50
 
         enabled: !schedular.running
 
@@ -214,21 +217,19 @@ ApplicationWindow {
         anchors.bottomMargin: 5
         height: 30
 
-        text: qsTr("Gant Chart")
+        text: qsTr("Gant Chartt")
         horizontalAlignment: Text.AlignHCenter
         font.weight: Font.Bold
         font.pixelSize: 20
     }
     GantChart{
         id: gantChart
-        y: 562
+        x: 157
+        y: 731
+        width: 838
         height: 45
-        anchors.bottom: controlBox.bottom
-        anchors.bottomMargin: 10
-        anchors.right: controlBox.left
-        anchors.rightMargin: 20
-        anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 55
         model: gantChartModel
     }
 
@@ -250,10 +251,11 @@ ApplicationWindow {
     }
     GantChart {
         id: finishedProcesses
-        anchors.top: controlBox.top
+        y: 665
+//        height: 20
+        anchors.leftMargin: -19
         anchors.right: gantChart.righ
         anchors.left: gantChart.left
-        anchors.topMargin: 20
 
         clickable: true
         model: finishedProcessesModel
@@ -282,11 +284,12 @@ ApplicationWindow {
     GrayRectangle {
         id: controlBox
         x: 756
-        y: 453
+        y: 389
         width: 245
         height: 180
+        anchors.horizontalCenterOffset: 1
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 30
+        anchors.bottomMargin: 231
         anchors.horizontalCenter: arrivalQueue.horizontalCenter
 
         Slider {
@@ -411,7 +414,7 @@ ApplicationWindow {
 /*##^##
 Designer {
     D{i:1;anchors_x:19;anchors_y:93}D{i:2;anchors_width:138;anchors_x:370}D{i:6;anchors_x:7}
-D{i:9;anchors_width:770;anchors_x:19}D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}
-D{i:19;anchors_width:179}
+D{i:8;anchors_x:-98;anchors_y:63}D{i:9;anchors_width:770;anchors_x:19}D{i:10;anchors_x:7}
+D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}D{i:19;anchors_width:179}
 }
 ##^##*/

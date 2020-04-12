@@ -5,38 +5,42 @@ import schedular 0.1
 
 GrayRectangle {
     id: schedualrAlgorithms
-    width: 250
-    height: 200
+    width: 1160
+    height: 75
 
 
     readonly property alias preemptive: preemptiveCheckBox.checked
     readonly property alias quanta: quantaSelector.value
     property int algorithm : Schedular.FCFS
 
-    Label {
-        id: label
-
-        anchors.right: schedualrAlgorithms.left
-        anchors.bottom: schedualrAlgorithms.top
-        anchors.left: schedualrAlgorithms.right
-
-        height: 27
-
-        text: qsTr("Schedular Algorithms")
-        font.weight: Font.Bold
-        font.pixelSize: 20
-        horizontalAlignment: Text.AlignHCenter
-    }
-
-    ColumnLayout {
+    RowLayout {
         id: buttonsColumn
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.top: parent.top
+        anchors.rightMargin: 30
+        anchors.leftMargin: 30
+        spacing: 10
+        anchors.fill: parent
+
+        Label {
+            id: label
+
+            height: 27
+            color: "#bababa"
+
+            text: qsTr("Algorithms:")
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+            verticalAlignment: Text.AlignVCenter
+            font.capitalization: Font.MixedCase
+            font.weight: Font.Bold
+            font.pixelSize: 30
+            horizontalAlignment: Text.AlignHCenter
+        }
 
         AlgorithmButton {
             id: fcfs
             text: qsTr("FCFS")
+            Layout.fillHeight: true
+            Layout.fillWidth: false
             checked: true
             onClicked: {
                 preemptiveCheckBox.checked = false
@@ -48,6 +52,8 @@ GrayRectangle {
         AlgorithmButton {
             id: sjf
             text: qsTr("SJF")
+            Layout.fillHeight: true
+            Layout.fillWidth: false
             onClicked: {
                 preemptiveCheckBox.enabled = true
                 algorithm = Schedular.SJF
@@ -55,7 +61,9 @@ GrayRectangle {
         }
         AlgorithmButton {
             id: priority
-            text: qsTr("Priority")
+            text: qsTr("PR")
+            Layout.fillHeight: true
+            Layout.fillWidth: false
 
             onClicked: {
                 preemptiveCheckBox.enabled = true
@@ -65,6 +73,8 @@ GrayRectangle {
         AlgorithmButton {
             id: roundRobin
             text: qsTr("RR")
+            Layout.fillHeight: true
+            Layout.fillWidth: false
             checkable: true
             checked: false
             onClicked: {
@@ -73,37 +83,47 @@ GrayRectangle {
                 algorithm = Schedular.RR
             }
         }
-    }
 
+        QuantaSelctor {
+            id: quantaSelector
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.preferredHeight: 70
+            Layout.preferredWidth: 200
+            Layout.fillHeight: false
+            Layout.fillWidth: false
 
-    CheckBox {
-        id: preemptiveCheckBox
-        x: 135
-        y: 20
-        text: qsTr("Preemptive")
-        contentItem: Text {
-            text: parent.text
-            horizontalAlignment: Text.AlignLeft
-            color: "#fffffff0"
-            leftPadding: parent.indicator.width + parent.spacing
-            verticalAlignment: Text.AlignVCenter
+            enabled: roundRobin.checked
         }
-        enabled: false
+
+        CheckBox {
+            id: preemptiveCheckBox
+            text: qsTr("Preemptive")
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: false
+
+            contentItem: Text {
+                text: parent.text
+                font.weight: Font.Bold
+                font.pixelSize: 25
+                font.family: "Roboto"
+                color: "#bababa"
+                horizontalAlignment: Text.AlignLeft
+                leftPadding: parent.indicator.width + parent.spacing
+                verticalAlignment: Text.AlignVCenter
+            }
+            enabled: false
+        }
+
+
     }
 
 
-    QuantaSelctor {
-        id: quantaSelector
-        y: 143
-
-        height: 47
-        anchors.left: buttonsColumn.right
-        anchors.leftMargin: 15
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
-        anchors.right: parent.right
-        anchors.rightMargin: 10
-        opacity: roundRobin.checked
-    }
 
 }
+
+/*##^##
+Designer {
+    D{i:1;anchors_width:853}
+}
+##^##*/

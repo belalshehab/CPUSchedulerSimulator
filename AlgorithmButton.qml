@@ -4,12 +4,15 @@ import QtQuick.Layouts 1.12
 
 RadioButton {
     id: algorithmButton
-    width: 120
-    height: 40
+    implicitWidth: 120
+    implicitHeight: 40
+
     contentItem: Text {
         text: parent.text
-        font.pixelSize: 12
-        color: "#fffffff0"
+        font.weight: Font.Bold
+        font.pixelSize: 21
+        font.family: "Roboto"
+        color: "#bababa"
         leftPadding: parent.indicator.width + parent.spacing
         verticalAlignment: Text.AlignVCenter
     }

@@ -17,8 +17,8 @@ Item
     property alias fillColor1: fillGradientStop1.color
     property alias fillColor2: fillGradientStop2.color
 
-    width: 180
-    height: 120
+    implicitWidth: 180
+    implicitHeight: 120
     RectangularGlow
     {
         id: shadow

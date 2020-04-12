@@ -7,41 +7,32 @@ Item {
 
     readonly property alias value: slider.value
 
-    Label {
-        id: label
-        height: 20
-        text: qsTr("Quanta")
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        horizontalAlignment: Text.AlignHCenter
-        color: "#fffffff0"
-    }
-
+    opacity: enabled ? 1 : 0.3
     Slider {
         id: slider
-        y: 37
-        height: 23
 
-        anchors.leftMargin: 20
-        stepSize: 1
-        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.left: value.right
+        anchors.leftMargin: 5
+
+        height: 25
+        stepSize: 1
         from: 1
         to: 20
         value: Math.round((to - from ) /2)
 
+    }
+    Label{
+        id: value
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
 
-        enabled: opacity
+        text: parent.value
 
-        Label{
-            id: value
-            text: parent.value
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.left
-            anchors.rightMargin: 10
-            color: "#fffffff0"
-        }
+        font.pixelSize: 20
+        font.family: "Roboto"
+        color: "#fffffff0"
     }
     
     Behavior on opacity { NumberAnimation{duration: 200} }
