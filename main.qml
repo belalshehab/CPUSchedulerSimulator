@@ -46,20 +46,78 @@ ApplicationWindow {
         }
     }
 
-    StatusBox {
-        id: statusBox
-        y: 401
-        width: 245
-        height: 180
-        anchors.horizontalCenterOffset: -407
-        anchors.horizontalCenter: controlBox.horizontalCenter
+    RowLayout{
+        id: rowLayout
+        y: 168
+        height: 235
+        anchors.right: algorithms.right
+        anchors.rightMargin: 0
+        anchors.left: algorithms.left
+        anchors.leftMargin: 0
+        ProcessesQueue {
+            id: arrivalQueue
+            x: 61
+            y: 145
+            width: 470
+            height: 235
+            Layout.maximumHeight: 385
+            Layout.minimumHeight: 235
+            Layout.preferredHeight: 235
+            Layout.maximumWidth: 890
+            Layout.minimumWidth: 500
+            Layout.preferredWidth: 600
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-        averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
-        averageResponseTime: Math.round(schedular.averageResponseTime *100) /100
-        averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
+            dim: algorithms.algorithm != 3
 
-        idleTime: schedular.idleTime
+            minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
+            model: arrivingQueueModel
+
+            enabled: !schedular.running
+        }
+
+
+        ReadyQueue {
+            id: readyQueue
+            x: 565
+            y: 175
+            width: 235
+            height: 235
+            Layout.maximumHeight: 385
+            Layout.minimumHeight: 235
+            Layout.preferredHeight: 235
+            Layout.maximumWidth: 385
+            Layout.minimumWidth: 235
+            Layout.preferredWidth: 235
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            model: readyQueueModel
+        }
+
+        StatusBox {
+            id: statusBox
+            x: 918
+            y: 204
+            width: 235
+            height: 235
+            Layout.maximumHeight: 385
+            Layout.minimumHeight: 235
+            Layout.preferredHeight: 235
+            Layout.maximumWidth: 385
+            Layout.minimumWidth: 235
+            Layout.preferredWidth: 235
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
+            averageResponseTime: Math.round(schedular.averageResponseTime *100) /100
+            averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
+
+            idleTime: schedular.idleTime
+        }
     }
+
 
     ProcessDelegate {
         id: currentProcessDelegate
@@ -71,7 +129,6 @@ ApplicationWindow {
         anchors.rightMargin: 172
         visible: !schedular.idle
 
-        selected: true
 
         pid: schedular.currentProcess.pid
         arrivalTime: schedular.currentProcess.arrivalTime
@@ -91,10 +148,10 @@ ApplicationWindow {
     Schedular{
         id: schedular
         delay: speedSlider.value *500
-        preemptive: schedualrAlgorithms.preemptive
-        quanta: schedualrAlgorithms.quanta
+        preemptive: algorithms.preemptive
+        quanta: algorithms.quanta
 
-        algorithmId: schedualrAlgorithms.algorithm
+        algorithmId: algorithms.algorithm
         isArrivingQueueEmpty: !(arrivingQueueModel.count - currentArivingIndex)
 
         onReadyQueuePoped: {
@@ -148,20 +205,7 @@ ApplicationWindow {
     }
 
 
-    ProcessesQueue {
-        id: arrivalQueue
-        x: 714
-        y: 192
-        width: 330
-        height: 260
 
-        dim: schedualrAlgorithms.algorithm != 3
-
-        minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
-        model: arrivingQueueModel
-
-        enabled: !schedular.running
-    }
 
     ProcessesQueueModel{
         id: arrivingQueueModel
@@ -169,13 +213,7 @@ ApplicationWindow {
     }
 
 
-    ReadyQueue {
-        id: readyQueue
-        x: 288
-        y: 135
-        height: 260
-        model: readyQueueModel
-    }
+
 
     ProcessesQueueModel{
         id: readyQueueModel
@@ -184,7 +222,7 @@ ApplicationWindow {
 
 
     SchedualrAlgorithms {
-        id: schedualrAlgorithms
+        id: algorithms
         height: 70
         anchors.top: parent.top
         anchors.topMargin: 30
@@ -197,7 +235,7 @@ ApplicationWindow {
 
 
         onAlgorithmChanged: {
-            switch(schedualrAlgorithms.algorithm)
+            switch(algorithms.algorithm)
             {
             case Schedular.SJF:
                 readyQueueModel.sortingOn = ProcessesQueueModel.DURATION
@@ -283,14 +321,12 @@ ApplicationWindow {
 
     GrayRectangle {
         id: controlBox
-        x: 756
-        y: 389
+        x: 17
+        y: 519
         width: 245
         height: 180
-        anchors.horizontalCenterOffset: 1
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 231
-        anchors.horizontalCenter: arrivalQueue.horizontalCenter
+        anchors.bottomMargin: 21
 
         Slider {
             id: speedSlider
@@ -413,8 +449,8 @@ ApplicationWindow {
 
 /*##^##
 Designer {
-    D{i:1;anchors_x:19;anchors_y:93}D{i:2;anchors_width:138;anchors_x:370}D{i:6;anchors_x:7}
-D{i:8;anchors_x:-98;anchors_y:63}D{i:9;anchors_width:770;anchors_x:19}D{i:10;anchors_x:7}
-D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}D{i:19;anchors_width:179}
+    D{i:2;anchors_width:138;anchors_x:370}D{i:1;anchors_x:19;anchors_y:93}D{i:5;anchors_width:138;anchors_x:370}
+D{i:6;anchors_x:7}D{i:8;anchors_x:"-98";anchors_y:63}D{i:9;anchors_width:770;anchors_x:19}
+D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}D{i:19;anchors_width:179}
 }
 ##^##*/

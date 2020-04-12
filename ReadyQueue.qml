@@ -3,8 +3,8 @@ import QtQuick.Controls 2.12
 
 GrayRectangle {
     id: root
-    width: 200
-    height: 333
+    implicitWidth: 350
+    implicitHeight: 350
 
     property alias model: listView.model
 
@@ -13,11 +13,12 @@ GrayRectangle {
 
         anchors.right: parent.left
         anchors.left: parent.right
-        anchors.bottom: parent.top
+        anchors.top: parent.top
 
         height: 30
 
         text: qsTr("Ready Queue")
+        anchors.topMargin: 5
         horizontalAlignment: Text.AlignHCenter
         font.weight: Font.Bold
         font.pixelSize: 20
@@ -26,16 +27,17 @@ GrayRectangle {
 
     ListView {
         id: listView
+        anchors.topMargin: 5
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.top: parent.top
+        anchors.top: label.bottom
         anchors.margins: 15
         clip: true
 
-        spacing: 10
+        spacing: 12
 
-        ScrollBar.vertical: ScrollBar{ width: 8}
+        ScrollBar.vertical: ScrollBar{ width: 6}
         delegate: processDelegate
     }
 
@@ -43,12 +45,11 @@ GrayRectangle {
         id: processDelegate
         ProcessDelegate{
 
-            width: listView.width
+            width: listView.width - 7
             pid: model.pid
             arrivalTime: model.arrivalTime
             duration: model.duration
             priority: model.priority
-            selected: true
         }
     }
 }

@@ -8,34 +8,37 @@ Item {
     property alias minimumValue: spinBox.from
     property alias maximumValue: spinBox.to
     property alias defaultValue: spinBox.value
-    property alias name: text.text
+    property alias name: name.text
 
     readonly property alias value: spinBox.value
 
-    Layout.maximumWidth: 150
-    Layout.minimumWidth: 125
-    Layout.preferredWidth: 125
-    Layout.maximumHeight: 70
-    Layout.minimumHeight: 60
-    Layout.preferredHeight: 60
-    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-    Layout.fillHeight: true
-    Layout.fillWidth: true
+    implicitWidth: 67; implicitHeight: implicitWidth
+
+
     SpinBox {
         id: spinBox
-        editable: true
-        wheelEnabled: true
+        font.weight: Font.Medium
+        font.pixelSize: 15
 
-        value: 0
-        from: 0
-        to: 1000
-        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+
+        from: 0
+        to: 1000
+        value: from
+
+        editable: true
+        wheelEnabled: true
     }
     Label{
-        id: text
-        anchors.bottom: parent.bottom
+        id: name
+        anchors.top: parent.top
+        horizontalAlignment: Text.AlignHCenter
         anchors.horizontalCenter: parent.horizontalCenter
+
+        font.weight: Font.Bold
+        font.pixelSize: 17
+        color: "#BABABA"
     }
 }

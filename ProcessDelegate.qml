@@ -1,8 +1,11 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
-Rectangle {
+Item {
     id: root
+
+    height: 30
 
     property int pid
     property int arrivalTime
@@ -11,109 +14,135 @@ Rectangle {
 
     property bool removable: false
 
-    property bool selected : false
-
     property alias pColor: colorRec.color
 
     signal colorClicked
     signal leftClicked
     signal deleteClicked
+    width: 600
 
-    height: selected ? 40 : 20
 
-    color: "transparent"
-    border.color:  "transparent"
-
-    MouseArea{
+    RowLayout{
         anchors.fill: parent
-        onClicked: {
-            leftClicked()
-        }
-    }
+        anchors.bottomMargin: 3
+
+        RoundButton{
+            id: deleteButton
+
+            Layout.preferredHeight: 30
+            Layout.preferredWidth: 30
+            Layout.maximumHeight: 35
+            Layout.maximumWidth: 35
+            Layout.minimumHeight: 25
+            Layout.minimumWidth: 25
+
+            text: "X"
+
+            display: AbstractButton.TextOnly
+            font.weight: Font.Bold
+            font.pixelSize: 10
+            font.family: "ROBOTO"
+
+            visible: removable
+            enabled: removable
 
 
-    Rectangle{
-        id: deleteButton
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        anchors.leftMargin: parent.border.width +1
-
-        width: removable ? 15 : 0
-        height: width
-
-        visible: removable
-
-        color: "transparent"
-
-        Rectangle{
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-
-            height: 4
-            color: "black"
-        }
-
-        MouseArea{
-            anchors.fill: parent
             onClicked:
             {
                 deleteClicked()
             }
         }
-    }
 
-    Rectangle{
-        id: colorRec
-        width: 5
-        height: selected ? 30 : 15
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: deleteButton.right
-        anchors.leftMargin: 3
-        color: Qt.rgba(Math.random(), Math.random(), Math.random(),1);
-        MouseArea{
-            anchors.fill: parent
-            onClicked: {
-                leftClicked()
-                colorClicked()
-            }
-        }
-    }
-    Column{
-        anchors.left: colorRec.right
-        anchors.leftMargin: 5
-        spacing: 2
-        Row{
-            spacing: 10
+        Rectangle{
+            id: colorRec
+            color: Qt.rgba(Math.random(), Math.random(), Math.random(),1);
+            Layout.fillHeight: true
+            Layout.bottomMargin: 6
+            Layout.topMargin: 6
 
-            Label {
-                text: qsTr("P" + pid)
-                color: "#fffffff0"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            Label {
-                text: qsTr("Arrived: " + arrivalTime + "ms")
-                color: "#fffffff0"
-                anchors.verticalCenter: parent.verticalCenter
+            Layout.maximumWidth: 7
+            Layout.minimumWidth: 5
+            Layout.preferredWidth: 6
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    leftClicked()
+                    colorClicked()
+                }
             }
         }
 
-        Row{
-            spacing: 10
-            opacity: selected
-            Label {
-                text: qsTr("Duration: " + duration + "ms")
-                color: "#fffffff0"
-                anchors.verticalCenter: parent.verticalCenter
-            }
 
-            Label {
-                text: qsTr("Pr: " + priority)
-                color: "#fffffff0"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            Behavior on opacity{ NumberAnimation{duration: selected ? 75 : 450; easing.type: Easing.InOutCubic}}
+        Label {
+            text: qsTr("P" + pid)
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            font.pixelSize: 15
+            color: "#fffffff0"
+        }
+        Rectangle{
+            Layout.preferredWidth: 1
+            Layout.preferredHeight: -1
+            Layout.bottomMargin: 5
+            Layout.topMargin: 5
+            Layout.fillHeight: true
+            Layout.maximumWidth: 1
+            Layout.minimumWidth: 1
+            color: "#BFBFBF"
+            opacity: 0.5
+        }
+
+        Label {
+            text: qsTr(arrivalTime + "ms")
+            Layout.fillHeight: true
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            Layout.fillWidth: true
+            font.pixelSize: 15
+            color: "#fffffff0"
+        }
+
+        Rectangle{
+            Layout.preferredWidth: 1
+            Layout.preferredHeight: -1
+            Layout.bottomMargin: 5
+            Layout.topMargin: 5
+            Layout.fillHeight: true
+            Layout.maximumWidth: 1
+            Layout.minimumWidth: 1
+            color: "#BFBFBF"
+            opacity: 0.5
+        }
+
+        Label {
+            text: qsTr(duration + "ms")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            color: "#fffffff0"
+        }
+
+        Rectangle{
+            Layout.preferredWidth: 1
+            Layout.preferredHeight: -1
+            Layout.bottomMargin: 5
+            Layout.topMargin: 5
+            Layout.fillHeight: true
+            Layout.maximumWidth: 1
+            Layout.minimumWidth: 1
+            color: "#BFBFBF"
+            opacity: 0.5
+        }
+        Label {
+            text: priority
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            color: "#fffffff0"
         }
     }
 
@@ -121,6 +150,4 @@ Rectangle {
         anchors.bottom: parent.bottom
         width: parent.width
     }
-    Behavior on height{ NumberAnimation {duration: 150; easing.type: Easing.InOutCubic} }
-
 }

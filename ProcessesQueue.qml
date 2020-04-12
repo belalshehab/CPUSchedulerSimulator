@@ -5,40 +5,107 @@ import QtQuick.Dialogs 1.2
 
 GrayRectangle {
     id: root
-    width: 350
-    height: 270
+    implicitWidth: 600
+    implicitHeight: 255
 
     property alias model: listView.model
     property int minimumArrivingTime: 0
     property bool dim: false
 
-    Label {
-        id: label3
 
-        anchors.right: root.left
-        anchors.left: root.right
-        anchors.bottom: root.top
+    RowLayout {
+        id: rowLayout
+        height: 70
+        anchors.top: parent.top
+        anchors.topMargin: 5
+        anchors.left: parent.left
+        anchors.leftMargin: 30
+        anchors.rightMargin: 30
+        anchors.right: parent.right
+        spacing: 10
 
+        Button {
+            id: addButton
+            text: qsTr("Add")
+            Layout.minimumWidth: 40
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            font.pixelSize: 12
 
-        height: 30
-        text: qsTr("User Input")
-        horizontalAlignment: Text.AlignHCenter
-        font.weight: Font.Bold
-        font.pixelSize: 20
+            onClicked: {
+                root.model.add(arrivalTime.value, duration.value, priority.value)
+            }
+        }
+
+        Button{
+            id: clearButton
+            text: qsTr("Clear")
+            Layout.minimumWidth: 55
+            Layout.fillWidth: true
+            font.pixelSize: 12
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            onClicked: listView.model.clear()
+        }
+
+        ProccessProperty {
+            id: arrivalTime
+            minimumValue: minimumArrivingTime
+            name: qsTr("Arrival")
+            Layout.minimumWidth: 105
+            defaultValue: 0
+            Layout.preferredWidth: 120
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+
+        ProccessProperty {
+            id: duration
+            minimumValue: 1
+            defaultValue: 1
+            name: qsTr("Duration")
+            Layout.minimumWidth: 105
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.preferredWidth: 120
+        }
+
+        ProccessProperty {
+            id: priority
+            maximumValue: 7
+            name: qsTr("Priority")
+            Layout.minimumWidth: 105
+            Layout.preferredWidth: 120
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            opacity: dim ? 0.3 : 1
+        }
+    }
+
+    Rectangle{
+        anchors.top: rowLayout.bottom
+        anchors.left: rowLayout.left
+        anchors.right: rowLayout.right
+        height: 1
+        color: "#BFBFBF"
+        opacity: 0.5
     }
 
     ListView {
         id: listView
-        width: 158
-        anchors.bottomMargin: 5
-        anchors.left: parent.left
-        anchors.bottom: clearButton.top
-        anchors.top: parent.top
+        anchors.leftMargin: 20
+        anchors.topMargin: 10
+        anchors.right: rowLayout.right
+        anchors.bottomMargin: 10
+        anchors.left: rowLayout.left
+        anchors.bottom: parent.bottom
+        anchors.top: rowLayout.bottom
         anchors.margins: 15
         clip: true
         spacing: 12
 
-        ScrollBar.vertical: ScrollBar{ width: 8}
+        ScrollBar.vertical: ScrollBar{ width: 6}
         delegate: processDelegate
 
 
@@ -70,70 +137,22 @@ GrayRectangle {
     Component {
         id: processDelegate
         ProcessDelegate{
-            width: listView.width - 10
+            width: listView.width - 7
             pid: model.pid
             arrivalTime: model.arrivalTime
             duration: model.duration
             priority: model.priority
-            selected: true
             removable: true
             onColorClicked: {
                 listView.currentIndex = index
                 colorDialog.open()
             }
             onLeftClicked: {
-                //                listView.currentItem.selected = false
                 listView.currentIndex = index
             }
-            onDeleteClicked: arrivingQueueModel.remove(index)
+            onDeleteClicked: root.model.remove(index)
         }
     }
-
-
-    ColumnLayout {
-        id: columnLayout
-        x: 84
-        width: 140
-        anchors.rightMargin: 15
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.top: parent.top
-        spacing: 10
-
-        ProccessProperty {
-            id: arrivalTime
-            minimumValue: minimumArrivingTime
-            name: qsTr("Arrival time")
-        }
-
-        ProccessProperty {
-            id: duration
-            minimumValue: 1
-            defaultValue: 1
-            name: qsTr("Duration")
-        }
-
-        ProccessProperty {
-            id: priority
-            maximumValue: 7
-            name: qsTr("Priority")
-
-            opacity: dim ? 0.3 : 1
-        }
-
-        Button {
-            id: addButton
-            text: qsTr("Add")
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            font.pixelSize: 12
-
-            onClicked: {
-                arrivingQueueModel.add(arrivalTime.value, duration.value, priority.value)
-            }
-        }
-    }
-
 
 
     ColorDialog {
@@ -145,19 +164,11 @@ GrayRectangle {
     }
 
 
-    Button{
-        id: clearButton
 
-        anchors.right: listView.right
-        anchors.left: listView.left
-        anchors.bottom: parent.bottom
-
-        height: 48
-
-        text: qsTr("Clear")
-        font.pixelSize: 12
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-        onClicked: listView.model.clear()
-    }
 }
+
+/*##^##
+Designer {
+    D{i:15;anchors_width:140;anchors_x:84}
+}
+##^##*/
