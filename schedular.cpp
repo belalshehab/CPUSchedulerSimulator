@@ -18,6 +18,9 @@ Schedular::Schedular(QObject *parent): QObject{parent},
     m_processComparator =  [](const Process &p1, const Process &p2){
         return p1.m_arrivalTime < p2.m_arrivalTime;
     };
+    m_processComparatorOrEqual =  [](const Process &p1, const Process &p2){
+        return p1.m_arrivalTime <= p2.m_arrivalTime;
+    };
 }
 
 int Schedular::enqueueArrivedProccess(const Process &process)
@@ -27,43 +30,33 @@ int Schedular::enqueueArrivedProccess(const Process &process)
         return -1;
     }
 
-    if(process.m_pid == m_currentProcess.m_pid)
+    if(m_algorithmId == AlgorithmId::RR)
     {
-        if(m_algorithmId == AlgorithmId::RR)
-        {
-            m_readyQueue.insert(m_readyQueue.count(), process);
-            return m_readyQueue.count() -1;
-        }
-        else
-        {
-            m_readyQueue.insert(1, process);
-            return 1;
-        }
+        m_readyQueue.insert(m_readyQueue.count(), process);
+        return m_readyQueue.count() -1;
     }
 
     std::vector<Process>::reverse_iterator itr;
 
     long long index = 0;
 
-    std::function<bool(const Process &)> searchFunc = std::bind(m_processComparator, process, std::placeholders::_1);
 
-    if(m_algorithmId == SJF) //SJF
+    if(process.m_pid == m_currentProcess.m_pid) //Insert from preemptive swap
     {
-        index = std::find_if(m_readyQueue.begin(), m_readyQueue.end(), searchFunc) - m_readyQueue.begin();
+        //If swap we need to insert the process in the first suitble location
+        std::function<bool(const Process &)> findLastLocation = std::bind(m_processComparatorOrEqual, process, std::placeholders::_1);
+        index = std::find_if(m_readyQueue.begin(), m_readyQueue.end(), findLastLocation) - m_readyQueue.begin();
     }
 
-    else if(m_algorithmId == PRIORITY) //Priority
+    else //Normal insert
     {
-        index = std::find_if(m_readyQueue.begin(), m_readyQueue.end(), searchFunc) - m_readyQueue.begin();
+        std::function<bool(const Process &)> findFirstLocation = std::bind(m_processComparator, process, std::placeholders::_1);
+        index = std::find_if(m_readyQueue.begin(), m_readyQueue.end(), findFirstLocation) - m_readyQueue.begin();
     }
 
-    else //FCFS, RR
-    {
-        index = std::find_if(m_readyQueue.begin(), m_readyQueue.end(), searchFunc) - m_readyQueue.begin();
-    }
-
-    m_readyQueue.insert(static_cast<int>(index), process);
-    return index;
+    int location = static_cast<int>(index);
+    m_readyQueue.insert(location, process);
+    return location;
 }
 
 void Schedular::reset()
@@ -72,7 +65,7 @@ void Schedular::reset()
     m_finishedProcesses.clear();
     m_gantChart.clear();
     setCurrentTime(0);
-//    setPaused(true);
+    //    setPaused(true);
 
     m_totalWaitingTime = 0;
     m_totalResponseTime = 0;
@@ -94,7 +87,7 @@ void Schedular::pause()
 
 void Schedular::stop()
 {
-//    m_timer.setInterval(0);
+    //    m_timer.setInterval(0);
     m_timer.start(0);
 }
 
@@ -317,7 +310,7 @@ Process Schedular::getFinishedProcess(int index) const
 
 Process Schedular::lastFinishedProcess() const
 {
-   return m_finishedProcesses.last();
+    return m_finishedProcesses.last();
 }
 
 
@@ -367,17 +360,26 @@ void Schedular::setAlgorithmId(AlgorithmId algorithmId)
         m_processComparator =  [](const Process &p1, const Process &p2){
             return p1.m_duration < p2.m_duration;
         };
+        m_processComparatorOrEqual =  [](const Process &p1, const Process &p2){
+            return p1.m_duration <= p2.m_duration;
+        };
         break;
 
     case PRIORITY:
         m_processComparator =  [](const Process &p1, const Process &p2){
             return p1.m_priority < p2.m_priority;
         };
+        m_processComparatorOrEqual =  [](const Process &p1, const Process &p2){
+            return p1.m_priority <= p2.m_priority;
+        };
         break;
 
     default:
         m_processComparator =  [](const Process &p1, const Process &p2){
             return p1.m_arrivalTime < p2.m_arrivalTime;
+        };
+        m_processComparatorOrEqual =  [](const Process &p1, const Process &p2){
+            return p1.m_arrivalTime <= p2.m_arrivalTime;
         };
     }
 }

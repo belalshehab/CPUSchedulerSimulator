@@ -137,6 +137,8 @@ private:
 
 private:
     std::function<bool(Process, Process)> m_processComparator;
+    std::function<bool(Process, Process)> m_processComparatorOrEqual;
+
     QVector<Process> m_readyQueue;
 
     AlgorithmId m_algorithmId;
