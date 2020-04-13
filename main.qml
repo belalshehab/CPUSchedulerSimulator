@@ -12,7 +12,7 @@ ApplicationWindow {
     height: 720
 
 
-    color: "#000000"
+    color: "#333333"
 
     title: "CPU schedular"
 
@@ -46,14 +46,41 @@ ApplicationWindow {
         }
     }
 
+
+    SchedualrAlgorithms {
+        id: algorithms
+        height: 70
+        anchors.top: parent.top
+        anchors.topMargin: 30
+        anchors.left: parent.left
+        anchors.leftMargin: 50
+        anchors.right: parent.right
+        anchors.rightMargin: 50
+
+        enabled: !schedular.running
+
+
+        onAlgorithmChanged: {
+            switch(algorithms.algorithm)
+            {
+            case Schedular.SJF:
+                readyQueueModel.sortingOn = ProcessesQueueModel.DURATION
+                break;
+            case Schedular.PRIORITY:
+                readyQueueModel.sortingOn = ProcessesQueueModel.PRIORITY
+                break;
+            default:
+                readyQueueModel.sortingOn = ProcessesQueueModel.ARRIVAL
+            }
+        }
+    }
+
     RowLayout{
         id: rowLayout
         y: 168
         height: 235
         anchors.right: algorithms.right
-        anchors.rightMargin: 0
         anchors.left: algorithms.left
-        anchors.leftMargin: 0
         ProcessesQueue {
             id: arrivalQueue
             x: 61
@@ -74,7 +101,8 @@ ApplicationWindow {
             minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
             model: arrivingQueueModel
 
-            enabled: !schedular.running
+            enableEdit: !schedular.running
+//            dim: !schedular.running
         }
 
 
@@ -121,12 +149,10 @@ ApplicationWindow {
 
     ProcessDelegate {
         id: currentProcessDelegate
-        y: 601
+        x: 314
+        y: 461
+        width: 250
         height: 48
-        anchors.left: parent.left
-        anchors.leftMargin: 748
-        anchors.right: parent.right
-        anchors.rightMargin: 172
         visible: !schedular.idle
 
 
@@ -134,20 +160,11 @@ ApplicationWindow {
         arrivalTime: schedular.currentProcess.arrivalTime
         duration: schedular.currentProcess.duration
         priority: schedular.currentProcess.priority
-
-        //        states: State {
-        //                name: "add"
-        //                PropertyChanges { target: currentProcessDelegate; y: 50 }
-        //            }
-
-        //            transitions: Transition {
-        //                PropertyAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
-        //            }
     }
 
     Schedular{
         id: schedular
-        delay: speedSlider.value *500
+        delay: controlBox.speed *500
         preemptive: algorithms.preemptive
         quanta: algorithms.quanta
 
@@ -221,53 +238,32 @@ ApplicationWindow {
     }
 
 
-    SchedualrAlgorithms {
-        id: algorithms
-        height: 70
-        anchors.top: parent.top
-        anchors.topMargin: 30
-        anchors.left: parent.left
-        anchors.leftMargin: 50
-        anchors.right: parent.right
-        anchors.rightMargin: 50
 
-        enabled: !schedular.running
-
-
-        onAlgorithmChanged: {
-            switch(algorithms.algorithm)
-            {
-            case Schedular.SJF:
-                readyQueueModel.sortingOn = ProcessesQueueModel.DURATION
-                break;
-            case Schedular.PRIORITY:
-                readyQueueModel.sortingOn = ProcessesQueueModel.PRIORITY
-                break;
-            default:
-                readyQueueModel.sortingOn = ProcessesQueueModel.ARRIVAL
-            }
-        }
-    }
 
     Label {
-        anchors.left: gantChart.left
-        anchors.bottom: gantChart.top
-        anchors.bottomMargin: 5
+        x: 92
+        y: 674
         height: 30
+        color: "#bababa"
 
         text: qsTr("Gant Chartt")
+        anchors.verticalCenterOffset: -3
+        verticalAlignment: Text.AlignVCenter
+        anchors.right: rectangle.left
+        anchors.rightMargin: 30
+        anchors.verticalCenter: gantChart.verticalCenter
         horizontalAlignment: Text.AlignHCenter
         font.weight: Font.Bold
         font.pixelSize: 20
     }
     GantChart{
         id: gantChart
-        x: 157
-        y: 731
-        width: 838
-        height: 45
+        anchors.bottom: rectangle.bottom
+        anchors.left: rectangle.right
+        anchors.leftMargin: 30
         anchors.right: parent.right
-        anchors.rightMargin: 55
+        anchors.rightMargin: 30
+
         model: gantChartModel
     }
 
@@ -276,24 +272,29 @@ ApplicationWindow {
     }
 
     Label {
-        anchors.left: finishedProcesses.left
-        anchors.bottom: finishedProcesses.top
-        anchors.bottomMargin: 5
+        x: 107
+        y: 631
 
         height: 30
+        color: "#bababa"
 
         text: qsTr("Finished Processes")
+        anchors.verticalCenterOffset: -3
+        verticalAlignment: Text.AlignVCenter
+        anchors.right: rectangle.left
+        anchors.rightMargin: 30
+        anchors.verticalCenter: finishedProcesses.verticalCenter
         horizontalAlignment: Text.AlignHCenter
         font.weight: Font.Bold
         font.pixelSize: 20
     }
     GantChart {
         id: finishedProcesses
-        y: 665
-//        height: 20
-        anchors.leftMargin: -19
-        anchors.right: gantChart.righ
+
+        anchors.bottom: gantChart.top
+        anchors.right: gantChart.right
         anchors.left: gantChart.left
+        anchors.bottomMargin: 20
 
         clickable: true
         model: finishedProcessesModel
@@ -319,121 +320,32 @@ ApplicationWindow {
     }
 
 
-    GrayRectangle {
+    ControlBox {
         id: controlBox
-        x: 17
-        y: 519
-        width: 245
-        height: 180
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 21
+        x: 15
+        y: 461
+        width: 221
+        height: 77
+        anchors.right: rectangle.left
+        anchors.rightMargin: 30
 
-        Slider {
-            id: speedSlider
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-
-            orientation: Qt.Vertical
-
-            width: 40
-
-            value: 1
-            stepSize: 0.1
-            from: 2; to: 0.1
-        }
-        Button {
-            id: startButton
-            x: 107
-            y: 73
-            width: 62
-            height: 49
-            text: qsTr("Start")
-            anchors.verticalCenter: parent.verticalCenter
-
-            onClicked: {
-
+        isRunning: schedular.running
+        onStartClicked:
+        {
+            if(schedular.running)
+            {
+//                schedular.paus()
+            }
+            else
+            {
                 schedular.startSolving()
             }
+
+
         }
+        onStepClicked: schedular.step()
 
-        Button {
-            id: endButton
-            x: 29
-            y: 83
-            width: 62
-            height: 49
-            text: qsTr("End")
-            anchors.verticalCenter: parent.verticalCenter
-        }
-
-        Label {
-            id: label1
-            y: 78
-            width: 50
-            height: 24
-            text: qsTr("Speed")
-            anchors.verticalCenterOffset: 0
-            anchors.left: speedSlider.right
-            anchors.leftMargin: -18
-            anchors.verticalCenter: parent.verticalCenter
-            rotation: 90
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 20
-        }
-
-        Button {
-            id: stepButton
-            x: 107
-            y: 63
-            width: 62
-            height: 49
-            text: qsTr("Step")
-            anchors.verticalCenterOffset: 58
-            anchors.verticalCenter: parent.verticalCenter
-
-            onClicked: {
-                schedular.step()
-            }
-        }
-
-        RowLayout{
-            height: 44
-            anchors.right: parent.right
-            anchors.rightMargin: 65
-            anchors.left: parent.left
-            anchors.leftMargin: 15
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: turnaroundTimeLabel
-                x: 15
-                y: 19
-                width: 61
-                height: 33
-                text: schedular.currentTime
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Current Time")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-        }
+//        onEndClicked: schedular.end()
     }
 
     ProcessDetails{
@@ -443,14 +355,45 @@ ApplicationWindow {
         height: 400
     }
 
+    DeepLine {
+        id: deepLine
+        x: 267
+        y: 607
+    }
+
+    Rectangle {
+        id: rectangle
+        x: 307
+        width: 1
+        color: "#bfbfbf"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 30
+        anchors.top: controlBox.top
+        anchors.topMargin: 0
+    }
+
+    Label {
+        x: 80
+        y: 544
+        height: 30
+        color: "#bababa"
+        text: schedular.currentTime
+        anchors.right: rectangle.left
+        anchors.rightMargin: 30
+        font.weight: Font.Bold
+        font.pixelSize: 20
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignRight
+    }
+
 
 
 }
 
 /*##^##
 Designer {
-    D{i:2;anchors_width:138;anchors_x:370}D{i:1;anchors_x:19;anchors_y:93}D{i:5;anchors_width:138;anchors_x:370}
+    D{i:1;anchors_x:19;anchors_y:93}D{i:5;anchors_width:138;anchors_x:370}D{i:2;anchors_width:138;anchors_x:370}
 D{i:6;anchors_x:7}D{i:8;anchors_x:"-98";anchors_y:63}D{i:9;anchors_width:770;anchors_x:19}
-D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}D{i:19;anchors_width:179}
+D{i:10;anchors_x:7}D{i:11;anchors_width:770;anchors_x:7;anchors_y:494}D{i:19;anchors_height:200;anchors_width:179;anchors_y:449}
 }
 ##^##*/

@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 GrayRectangle {
+
     id: root
     implicitWidth: 350
     implicitHeight: 350
@@ -39,6 +40,29 @@ GrayRectangle {
 
         ScrollBar.vertical: ScrollBar{ width: 6}
         delegate: processDelegate
+
+        add: Transition {
+            NumberAnimation {
+                properties: "x"; from: -listView.width;
+                duration: 150; easing.type: Easing.InCirc
+            }
+            NumberAnimation { properties: "height"; from: 0;
+                duration: 200; easing.type: Easing.InCirc
+            }
+        }
+        remove: Transition {
+            NumberAnimation {
+                properties: "x"; to: listView.width;
+                duration: 150; easing.type: Easing.OutCubic
+            }
+        }
+        removeDisplaced: Transition {
+            SequentialAnimation {
+                PauseAnimation { duration: 150 }
+                NumberAnimation { properties: "y"; duration: 75
+                }
+            }
+        }
     }
 
     Component {

@@ -14,5 +14,6 @@
         <file>DeepLine.qml</file>
         <file>ProcessDetails.qml</file>
         <file>StatusBox.qml</file>
+        <file>ControlBox.qml</file>
     </qresource>
 </RCC>

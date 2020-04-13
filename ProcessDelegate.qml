@@ -12,7 +12,7 @@ Item {
     property int duration
     property int priority
 
-    property bool removable: false
+    property bool editable: false
 
     property alias pColor: colorRec.color
 
@@ -43,8 +43,8 @@ Item {
             font.pixelSize: 10
             font.family: "ROBOTO"
 
-            visible: removable
-            enabled: removable
+            visible: editable
+            enabled: editable
 
 
             onClicked:
@@ -65,6 +65,7 @@ Item {
             Layout.preferredWidth: 6
             MouseArea{
                 anchors.fill: parent
+                enabled: editable
                 onClicked: {
                     leftClicked()
                     colorClicked()

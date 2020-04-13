@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 Item {
     id:root
     width: 800
-    height: 45
+    height: 38
 
     clip: true
     property alias model: gantChartView.model
@@ -44,12 +44,19 @@ Item {
             Label{
                 anchors.centerIn: parent
                 text: model.name
+
+                font.weight: Font.Bold
+                font.pixelSize: 13
+                font.family: "ROBOTO"
             }
 
             Label{
                 visible: !clickable
                 anchors.top: parent.bottom
                 text: model.time
+
+                font.pixelSize: 13
+                font.family: "ROBOTO"
             }
             MouseArea{
                 anchors.fill: parent

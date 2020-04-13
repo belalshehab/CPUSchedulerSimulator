@@ -11,7 +11,7 @@ GrayRectangle {
     property alias model: listView.model
     property int minimumArrivingTime: 0
     property bool dim: false
-
+    property bool enableEdit: true
 
     RowLayout {
         id: rowLayout
@@ -24,6 +24,7 @@ GrayRectangle {
         anchors.right: parent.right
         spacing: 10
 
+        enabled: enableEdit
         Button {
             id: addButton
             text: qsTr("Add")
@@ -136,13 +137,16 @@ GrayRectangle {
 
     Component {
         id: processDelegate
+
         ProcessDelegate{
             width: listView.width - 7
             pid: model.pid
             arrivalTime: model.arrivalTime
             duration: model.duration
             priority: model.priority
-            removable: true
+
+            editable: enableEdit
+
             onColorClicked: {
                 listView.currentIndex = index
                 colorDialog.open()
