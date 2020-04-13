@@ -9,7 +9,7 @@
 Schedular::Schedular(QObject *parent): QObject{parent},
     m_algorithmId{FCFS}, m_preemptive{false}, m_quanta{0},
     m_currentTime(0), m_currentProcess{0, 0, 0, 0},
-    m_running{false}, m_paused{false}, m_idle{true},
+    m_running{false}, m_paused{true}, m_idle{true},
     m_isArrivingQueueEmpty(true), m_totalWaitingTime{0}, m_averageWaitingTime{0}, m_totalTurnaroundTime{0}, m_averageTurnaroundTime{0},
     m_totalResponseTime{0}, m_averageResponseTime{0}, m_idleTime{0}
 {
@@ -72,7 +72,7 @@ void Schedular::reset()
     m_finishedProcesses.clear();
     m_gantChart.clear();
     setCurrentTime(0);
-    setPaused(false);
+//    setPaused(true);
 
     m_totalWaitingTime = 0;
     m_totalResponseTime = 0;
@@ -86,10 +86,23 @@ void Schedular::reset()
     m_currentQuanta = m_quanta;
 }
 
+void Schedular::pause()
+{
+    m_timer.stop();
+    setPaused(true);
+}
+
+void Schedular::stop()
+{
+//    m_timer.setInterval(0);
+    m_timer.start(0);
+}
+
 
 void Schedular::startSolving()
 {
     m_timer.start(m_delay);
+    setPaused(false);
 }
 
 void Schedular::solve()
@@ -109,11 +122,6 @@ bool Schedular::step()
         reset();
         setRunning(true);
         runReadyProcess();
-    }
-
-    if(m_paused)
-    {
-        return true;
     }
 
     if(m_currentProcess.m_duration || (!m_readyQueue.empty()))
@@ -147,6 +155,7 @@ bool Schedular::step()
         m_timer.stop();
         setRunning(false);
         setIdle(true);
+        setPaused(true);
         return false;
     }
 

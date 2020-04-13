@@ -17,7 +17,7 @@ class Schedular: public QObject
     Q_PROPERTY(bool preemptive READ preemptive WRITE setPreemptive NOTIFY preemptiveChanged)
     Q_PROPERTY(int delay READ delay WRITE setDelay NOTIFY delayChanged)
     Q_PROPERTY(unsigned int currentTime READ currentTime WRITE setCurrentTime NOTIFY currentTimeChanged)
-    Q_PROPERTY(bool m_paused READ paused WRITE setPaused NOTIFY pausedChanged)
+    Q_PROPERTY(bool paused READ paused WRITE setPaused NOTIFY pausedChanged)
     Q_PROPERTY(Process currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(int quanta READ quanta WRITE setQuanta NOTIFY quantaChanged)
     Q_PROPERTY(AlgorithmId algorithmId READ algorithmId WRITE setAlgorithmId NOTIFY algorithmIdChanged)
@@ -49,6 +49,9 @@ public:
     Q_INVOKABLE bool step();
     Q_INVOKABLE int enqueueArrivedProccess(const Process &process);
     Q_INVOKABLE void reset();
+
+    Q_INVOKABLE void pause();
+    Q_INVOKABLE void stop();
 
 
     QVector<Process> finishedProcesses() const;

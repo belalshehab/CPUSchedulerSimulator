@@ -46,6 +46,7 @@ Rectangle{
 
                 enabled: isRunning
 
+
                 onClicked: stopClicked()
             }
 

@@ -251,22 +251,29 @@ ApplicationWindow {
                 anchors.rightMargin: 30
 
                 isRunning: schedular.running
+                isPaused: schedular.paused
                 onStartClicked:
                 {
-                    if(schedular.running)
+//                    console.log("onStartClicked ", schedular.running, " " , )
+                    if(schedular.paused)
                     {
-                        //                schedular.paus()
+                        schedular.startSolving()
                     }
                     else
                     {
-                        schedular.startSolving()
+                        schedular.pause()
                     }
 
 
                 }
                 onStepClicked: schedular.step()
 
-                //        onEndClicked: schedular.end()
+                onStopClicked: {
+                    if(schedular.running)
+                    {
+                        schedular.stop()
+                    }
+                }
             }
 
 

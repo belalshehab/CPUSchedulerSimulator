@@ -9,10 +9,10 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="23.603411"
-   height="23.55541"
+   width="18.521732"
+   height="16.112459"
    version="1.1"
-   viewBox="0 0 23.60341 23.555411"
+   viewBox="0 0 18.521732 16.112459"
    xml:space="preserve"
    id="svg1323"
    sodipodi:docname="pauseButton.svg"
@@ -29,9 +29,9 @@
      inkscape:window-height="1001"
      id="namedview1325"
      showgrid="false"
-     inkscape:zoom="1.771069"
-     inkscape:cx="59.84308"
-     inkscape:cy="55.896971"
+     inkscape:zoom="5.0093395"
+     inkscape:cx="43.011645"
+     inkscape:cy="46.392111"
      inkscape:window-x="-9"
      inkscape:window-y="1341"
      inkscape:window-maximized="1"
@@ -167,7 +167,7 @@
 
 
 </defs><path
-     style="fill:#bfbfbf;stroke-width:1.33329999"
-     d="M 23.60341,0 H 0 v 23.555411 h 23.60341 z"
+     style="fill:#bfbfbf;stroke-width:0.97682536"
+     d="M 18.521733,0 H 0 v 16.112459 h 18.521733 z"
      id="path1027"
      inkscape:connector-curvature="0" /></svg>
