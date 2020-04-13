@@ -2,18 +2,20 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-import schedular 0.1
-
 
 //Item {
 Rectangle{
     color: "#333333"
     id: root
     property alias speed: speedSlider.value
+
     property int currentTime: 0
+
     property bool isRunning: false
+    property bool isPaused: true
+
     signal startClicked
-    signal endClicked
+    signal stopClicked
     signal stepClicked
 
     width: 445
@@ -33,42 +35,48 @@ Rectangle{
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             Button {
-                id: stepButton
+                id: stopButton
 
-                text: qsTr("Step")
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                enabled: !isRunning
-                onClicked: {
-                    stepClicked()
-                }
+
+                display: AbstractButton.IconOnly
+                icon.source: "icons/stopButton.svg"
+
+                enabled: isRunning
+
+                onClicked: stopClicked()
             }
+
             Button {
                 id: startButton
-
-                text: qsTr("S P")
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Layout.fillWidth: true
+
+                display: AbstractButton.IconOnly
+                icon.source: isPaused ? "icons/playButton.svg" : "icons/pauseButton.svg"
+
                 onClicked: {
                     startClicked()
                 }
             }
 
             Button {
-                id: endButton
-
-                text: qsTr("E")
+                id: stepButton
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                enabled: isRunning
+                display: AbstractButton.IconOnly
+                icon.source: "icons/stepButton.svg"
 
-                onClicked: endClicked()
+                enabled: isPaused
+                onClicked: {
+                    stepClicked()
+                }
             }
-
 
         }
 
@@ -86,39 +94,4 @@ Rectangle{
         }
     }
 
-    //    RowLayout{
-    //        height: 44
-    //        anchors.right: parent.right
-    //        anchors.rightMargin: 65
-    //        anchors.left: parent.left
-    //        anchors.leftMargin: 15
-    //        Layout.fillHeight: true
-    //        Layout.fillWidth: true
-    //        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-    //        Label {
-    //            id: turnaroundTimeLabel
-    //            x: 15
-    //            y: 19
-    //            width: 61
-    //            height: 33
-    //            text: schedular.currentTime
-    //            Layout.fillHeight: true
-    //            Layout.fillWidth: true
-    //            verticalAlignment: Text.AlignVCenter
-    //            horizontalAlignment: Text.AlignHCenter
-    //        }
-
-    //        Label {
-    //            x: 139
-    //            y: 25
-    //            width: 97
-    //            height: 32
-    //            text: qsTr("Current Time")
-    //            Layout.fillHeight: true
-    //            Layout.fillWidth: true
-    //            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-    //            verticalAlignment: Text.AlignVCenter
-    //            horizontalAlignment: Text.AlignHCenter
-    //        }
-    //    }
 }

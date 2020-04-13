@@ -15,5 +15,9 @@
         <file>ProcessDetails.qml</file>
         <file>StatusBox.qml</file>
         <file>ControlBox.qml</file>
+        <file>icons/pauseButton.svg</file>
+        <file>icons/playButton.svg</file>
+        <file>icons/stepButton.svg</file>
+        <file>icons/stopButton.svg</file>
     </qresource>
 </RCC>
