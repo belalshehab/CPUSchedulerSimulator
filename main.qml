@@ -227,9 +227,6 @@ ApplicationWindow {
                 }
             }
 
-
-
-
             ControlBox {
                 id: controlBox
                 x: 15
@@ -240,11 +237,11 @@ ApplicationWindow {
                 anchors.right: verticalSeparator.left
                 anchors.rightMargin: 30
 
+                enabled: !arrivingQueueModel.isEmpty
                 isRunning: schedular.running
                 isPaused: schedular.paused
                 onStartClicked:
                 {
-//                    console.log("onStartClicked ", schedular.running, " " , )
                     if(schedular.paused)
                     {
                         schedular.startSolving()

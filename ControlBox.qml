@@ -44,10 +44,17 @@ Rectangle{
                 display: AbstractButton.IconOnly
                 icon.source: "icons/stopButton.svg"
 
-                enabled: isRunning
+                opacity: isRunning ? 1 : 0.3
 
 
-                onClicked: stopClicked()
+                onClicked:
+                {
+                    if(isRunning)
+                    {
+                        stopClicked()
+
+                    }
+                }
             }
 
             Button {

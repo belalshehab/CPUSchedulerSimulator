@@ -30,7 +30,6 @@ int Schedular::enqueueArrivedProccess(const Process &process)
         return -1;
     }
 
-    qDebug() << process.m_pid;
     if(m_algorithmId == AlgorithmId::RR && process.m_pid == m_currentProcess.m_pid)
     {
         m_readyQueue.insert(m_readyQueue.count(), process);

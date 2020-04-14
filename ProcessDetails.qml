@@ -11,7 +11,7 @@ Popup {
     }
 
     property alias pid: pidLabel.text
-    property alias arrivalTime: arriavlTimeLabel.text
+    property alias arrivalTime: arrivalTimeLabel.text
     property alias duration: durationLabel.text
     property alias priority: priorityLabel.text
     property alias startedTime: startedTimeLabel.text
@@ -56,7 +56,7 @@ Popup {
 
                 Label {
                     id: label1
-                    text: qsTr("Arriavl Time")
+                    text: qsTr("Arrival Time")
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     verticalAlignment: Text.AlignVCenter
@@ -64,7 +64,7 @@ Popup {
                 }
 
                 Label {
-                    id: arriavlTimeLabel
+                    id: arrivalTimeLabel
                     text: qsTr("10")
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     Layout.fillHeight: true
