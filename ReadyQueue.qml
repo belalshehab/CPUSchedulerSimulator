@@ -36,6 +36,8 @@ GrayRectangle {
         anchors.margins: 15
         clip: true
 
+        verticalLayoutDirection: ListView.BottomToTop
+
         spacing: 12
 
         ScrollBar.vertical: ScrollBar{ width: 6}

@@ -40,7 +40,6 @@ ApplicationWindow {
                 break;
             }
 
-            //            var color = readyQueue.
             currentArivingIndex++
             readyQueueModel.insert(readyQueueIndex, p)
 
@@ -280,15 +279,48 @@ ApplicationWindow {
 
             ProcessDelegate {
                 id: currentProcessDelegate
-                x: 284
-                y: -90
-                width: 250
-                height: 48
-                anchors.verticalCenter: controlBox.verticalCenter
-                anchors.left: currentProcessLabel.right
-                anchors.leftMargin: 20
+
+//                anchors.left: currentProcessLabel.right
+//                anchors.leftMargin: 20
+                x: 530
+//                anchors.verticalCenter: controlBox.verticalCenter
+                y: 44
+
+                width: 210
+                height: 30
+
                 visible: !schedular.idle
 
+                property int animationDuration: 150
+               onPidChanged: {
+                    animatY.start()
+                   animatX.start()
+                   animatOpacity.start()
+                }
+
+               NumberAnimation on opacity{
+                   id: animatOpacity
+                   from: 0
+                   to: 1
+                   duration: currentProcessDelegate.animationDuration
+                   easing.type: Easing.InOutQuad
+               }
+
+               NumberAnimation on y{
+                   id: animatY
+                   from: 0
+                   to: 44
+                   duration: currentProcessDelegate.animationDuration
+                   easing.type: Easing.InOutQuad
+               }
+
+               NumberAnimation on x{
+                   id: animatX
+                   from: currentProcessDelegate.width + 530
+                   to: 530
+                   duration: currentProcessDelegate.animationDuration
+                   easing.type: Easing.InOutQuad
+               }
 
                 pid: schedular.currentProcess.pid
                 arrivalTime: schedular.currentProcess.arrivalTime
@@ -332,8 +364,8 @@ ApplicationWindow {
                 height: 30
                 color: "#bababa"
                 text: qsTr("Current Process")
-                anchors.left: verticalSeparator.right
-                anchors.leftMargin: 20
+                anchors.left: gantChart.left
+                anchors.leftMargin: 0
                 verticalAlignment: Text.AlignVCenter
                 anchors.verticalCenterOffset: 0
                 font.weight: Font.Bold
@@ -456,8 +488,9 @@ Designer {
     D{i:2;anchors_width:138;anchors_x:370;anchors_y:93}D{i:5;anchors_width:138;anchors_x:370}
 D{i:6;anchors_width:138;anchors_x:7}D{i:3;anchors_width:138;anchors_x:370}D{i:8;anchors_x:"-98";anchors_y:63}
 D{i:9;anchors_x:7}D{i:10;anchors_width:770;anchors_x:7;anchors_y:494}D{i:12;anchors_y:461}
-D{i:14;anchors_x:314}D{i:15;anchors_width:770;anchors_x:19}D{i:16;anchors_y:544}D{i:17;anchors_width:770;anchors_x:314;anchors_y:494}
-D{i:1;anchors_height:100;anchors_width:138;anchors_x:19;anchors_y:93}D{i:18;anchors_x:"-98";anchors_y:63}
-D{i:19;anchors_width:770;anchors_x:19;anchors_y:63}D{i:20;anchors_height:200;anchors_width:179;anchors_x:7;anchors_y:449}
+D{i:14;anchors_x:530}D{i:15;anchors_width:770;anchors_x:19;anchors_y:544}D{i:16;anchors_width:770;anchors_x:314;anchors_y:544}
+D{i:17;anchors_width:770;anchors_x:314;anchors_y:494}D{i:18;anchors_width:770;anchors_x:"-98";anchors_y:63}
+D{i:1;anchors_height:100;anchors_width:138;anchors_x:19;anchors_y:93}D{i:19;anchors_height:200;anchors_width:770;anchors_x:19;anchors_y:63}
+D{i:20;anchors_height:200;anchors_width:179;anchors_x:7;anchors_y:449}
 }
 ##^##*/
