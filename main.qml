@@ -32,6 +32,7 @@ ApplicationWindow {
         while(currentArivingIndex < arrivingQueueModel.count)
         {
             var p = arrivingQueueModel.get(currentArivingIndex)
+            schedular.currentProcess.color = p.color
 
             readyQueueIndex = schedular.enqueueArrivedProccess(p)
             if(readyQueueIndex < 0)
@@ -39,7 +40,7 @@ ApplicationWindow {
                 break;
             }
 
-            //            var color = arrivalQueue.ite
+            //            var color = readyQueue.
             currentArivingIndex++
             readyQueueModel.insert(readyQueueIndex, p)
 
@@ -293,6 +294,7 @@ ApplicationWindow {
                 arrivalTime: schedular.currentProcess.arrivalTime
                 duration: schedular.currentProcess.duration
                 priority: schedular.currentProcess.priority
+                color: schedular.currentProcess.color
             }
 
             GantChart{
@@ -378,11 +380,13 @@ ApplicationWindow {
         onGantChartChanged: {
             if(currentProcess.pid === 0)
             {
-                gantChartModel.append({name: "", width: 0,  time: currentTime,   color: "transparent"})
+                gantChartModel.append({name: "", width: 0,  time: currentTime, r: 0,   g: 0,  b: 0,   a: 0})
             }
             else
             {
-                gantChartModel.append({name: "P" + schedular.currentProcess.pid, width: 0,  time: currentTime,   color: "orange"})
+                gantChartModel.append({name: "P" + schedular.currentProcess.pid, width: 0,  time: currentTime,
+                                          r: schedular.currentProcess.color.r,   g: schedular.currentProcess.color.g,
+                                          b: schedular.currentProcess.color.b,   a: schedular.currentProcess.color.a})
             }
         }
 
@@ -402,13 +406,15 @@ ApplicationWindow {
             }
             else
             {
-                gantChartModel.append({name: "" , width: 5,  time: currentTime,   color: "green"})
+                gantChartModel.append({name: "" , width: 5,  time: currentTime, r: 0,   g: 0,  b: 0,   a: 0})
             }
         }
 
         onFinishedProcessesChanged: {
             var x = lastFinishedProcess()
-            finishedProcessesModel.append({name: "P" + x.pid, width: x.originalDuration *20 ,  time: currentTime,   color: "green"})
+            finishedProcessesModel.append({"name": "P" + x.pid, "width": x.originalDuration *20 ,  "time": currentTime,
+                                              r: schedular.currentProcess.color.r,   g: schedular.currentProcess.color.g,
+                                              b: schedular.currentProcess.color.b,   a: schedular.currentProcess.color.a})
         }
 
     }

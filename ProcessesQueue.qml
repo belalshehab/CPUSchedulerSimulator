@@ -34,7 +34,7 @@ GrayRectangle {
             font.pixelSize: 12
 
             onClicked: {
-                root.model.add(arrivalTime.value, duration.value, priority.value)
+                root.model.add(arrivalTime.value, duration.value, priority.value, Qt.rgba(Math.random(), Math.random(), Math.random(), 1))
             }
         }
 
@@ -145,6 +145,8 @@ GrayRectangle {
             duration: model.duration
             priority: model.priority
 
+            color: model.color
+
             editable: enableEdit
 
             onColorClicked: {
@@ -163,7 +165,8 @@ GrayRectangle {
         id: colorDialog
         title: "Please choose a color"
         onAccepted: {
-            return listView.currentItem.pColor = colorDialog.color
+            listView.currentItem.color = colorDialog.color
+            listView.model.setColor(listView.currentIndex, colorDialog.color)
         }
     }
 

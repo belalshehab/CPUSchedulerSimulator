@@ -2,6 +2,7 @@
 #define PROCESS_H
 #include <iostream>
 #include <QObject>
+#include <QColor>
 
 struct Process
 {
@@ -18,6 +19,8 @@ private:
     Q_PROPERTY(unsigned int responseTime MEMBER m_responseTime)
     Q_PROPERTY(unsigned int turnaroundTime MEMBER m_turnaroundTime)
     Q_PROPERTY(State state MEMBER m_state)
+    Q_PROPERTY(QColor color MEMBER m_color)
+
 public:
     Q_ENUMS(State)
     enum State
@@ -41,6 +44,8 @@ public:
     unsigned int m_turnaroundTime;
 
     State m_state;
+
+    QColor m_color;
 };
 
 Q_DECLARE_METATYPE(Process)

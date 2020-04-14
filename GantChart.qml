@@ -38,7 +38,7 @@ Item {
         id:gantChartDelegate
         Rectangle {
             height: gantChartView.height -20
-            color: model.color
+            color: Qt.rgba(model.r, model.g, model.b, model.a)
             width: model.width
 
             Label{
@@ -62,7 +62,6 @@ Item {
                 anchors.fill: parent
                 enabled: clickable
                 onClicked: {
-                    console.log("clicked ", index)
                     root.index = index
                     click()
                 }

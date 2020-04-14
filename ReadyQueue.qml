@@ -74,6 +74,8 @@ GrayRectangle {
             arrivalTime: model.arrivalTime
             duration: model.duration
             priority: model.priority
+
+            color: model.color
         }
     }
 }

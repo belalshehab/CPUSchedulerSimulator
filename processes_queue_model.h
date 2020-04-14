@@ -18,7 +18,8 @@ class ProcessesQueueModel : public QAbstractListModel
         PidRole = Qt::UserRole,
         ArrivingTimeRole,
         DurationRole,
-        PriorityRole
+        PriorityRole,
+        ColorRole
     };
 
 public:
@@ -30,7 +31,7 @@ public:
     explicit ProcessesQueueModel(QObject *parent = nullptr);
 
     Q_INVOKABLE int add(const Process &process);
-    Q_INVOKABLE int add(unsigned int arrivalTime, unsigned int duration, unsigned int priority);
+    Q_INVOKABLE int add(unsigned int arrivalTime, unsigned int duration, unsigned int priority, const QColor &color);
     Q_INVOKABLE void insert(int index, const Process &process);
     Q_INVOKABLE void remove(int index);
     Q_INVOKABLE void clear();
@@ -38,6 +39,7 @@ public:
     Q_INVOKABLE Process top();
     Q_INVOKABLE Process get(int index);
     Q_INVOKABLE bool isEmpty();
+    Q_INVOKABLE void setColor(int index, const QColor &color);
     void setIsEmpty(bool value);
 
 public:
