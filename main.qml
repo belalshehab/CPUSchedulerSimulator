@@ -60,13 +60,6 @@ ApplicationWindow {
             Layout.minimumHeight: 60
             Layout.preferredHeight: 70
             Layout.fillWidth: true
-            //            height: 70
-            //            anchors.top: parent.top
-            //            anchors.topMargin: 30
-            //            anchors.left: parent.left
-            //            anchors.leftMargin: 50
-            //            anchors.right: parent.right
-            //            anchors.rightMargin: 50
 
             enabled: !schedular.running
 
@@ -95,9 +88,6 @@ ApplicationWindow {
             Layout.preferredHeight: 235
             Layout.fillHeight: true
             Layout.fillWidth: true
-            //            height: 235
-            //            anchors.right: algorithms.right
-            //            anchors.left: algorithms.left
             ProcessesQueue {
                 id: arrivalQueue
                 x: 61
@@ -351,6 +341,16 @@ ApplicationWindow {
                 anchors.verticalCenter: controlBox.verticalCenter
                 horizontalAlignment: Text.AlignLeft
                 font.pixelSize: 20
+            }
+
+            Rectangle {
+                id: horizontalSeparator
+                anchors.verticalCenter: controlBox.bottom
+                anchors.left: gantChart.left
+                anchors.right: parent.right
+
+                height: 1
+                color: "#565656"
             }
 
         }

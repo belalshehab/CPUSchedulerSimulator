@@ -94,5 +94,14 @@ Rectangle{
             from: 2; to: 0.1
         }
     }
+    Rectangle {
+        id: horizontalSeparator
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        height: 1
+        color: "#565656"
+    }
 
 }

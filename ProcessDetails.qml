@@ -6,12 +6,12 @@ import QtQuick.Layouts 1.12
 Popup {
     id: root
 
-    background: Rectangle{
-        color: "black"
+    background: GrayRectangle{
+
     }
 
     property alias pid: pidLabel.text
-    property alias arrivalTime: arriavlaTimeLabel.text
+    property alias arrivalTime: arriavlTimeLabel.text
     property alias duration: durationLabel.text
     property alias priority: priorityLabel.text
     property alias startedTime: startedTimeLabel.text
@@ -46,253 +46,284 @@ Popup {
 
         anchors.margins: 15
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: arriavlaTimeLabel
-                x: 20
-                y: 90
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Arriavla Time")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    id: label1
+                    text: qsTr("Arriavl Time")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: arriavlTimeLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: durationLabel
-                x: 20
-                y: 90
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Duration")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Duration")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: durationLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: priorityLabel
-                x: 15
-                y: 19
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Priority")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Priority")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: priorityLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: startedTimeLabel
-                x: 15
-                y: 19
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Started Time")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Started Time")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: startedTimeLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: finishedTimeLabel
-                x: 15
-                y: 19
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Finished Time")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Finished Time")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: finishedTimeLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: turnaroundTimeLabel
-                x: 15
-                y: 19
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Turnaround Time")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Turnaround Time")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: turnaroundTimeLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: waitingTimeLabel
-                x: 20
-                y: 51
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Waiting Time")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Waiting Time")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: waitingTimeLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
 
-        RowLayout{
+        Item{
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Label {
-                id: responseTimeLabel
-                x: 20
-                y: 90
-                width: 61
-                height: 33
-                text: qsTr("0")
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
+            RowLayout{
+                anchors.fill: parent
 
-            Label {
-                x: 139
-                y: 25
-                width: 97
-                height: 32
-                text: qsTr("Response Time")
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+
+                Label {
+                    text: qsTr("Response Time")
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                }
+
+                Label {
+                    id: responseTimeLabel
+                    text: qsTr("10")
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: false
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                }
+
+            }
+            DeepLine{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
-
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+##^##*/

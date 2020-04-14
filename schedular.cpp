@@ -30,7 +30,8 @@ int Schedular::enqueueArrivedProccess(const Process &process)
         return -1;
     }
 
-    if(m_algorithmId == AlgorithmId::RR)
+    qDebug() << process.m_pid;
+    if(m_algorithmId == AlgorithmId::RR && process.m_pid == m_currentProcess.m_pid)
     {
         m_readyQueue.insert(m_readyQueue.count(), process);
         return m_readyQueue.count() -1;
@@ -70,6 +71,7 @@ void Schedular::reset()
     m_totalWaitingTime = 0;
     m_totalResponseTime = 0;
     m_totalTurnaroundTime = 0;
+    m_currentProcess = Process();
 
     setAverageWaitingTime(0);
     setAverageResponseTime(0);
@@ -87,7 +89,6 @@ void Schedular::pause()
 
 void Schedular::stop()
 {
-    //    m_timer.setInterval(0);
     m_timer.start(0);
 }
 
