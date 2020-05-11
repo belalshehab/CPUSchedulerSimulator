@@ -14,7 +14,7 @@ Item {
 
     property bool editable: false
 
-    property alias pColor: colorRec.color
+    property alias color: colorRec.color
 
     signal colorClicked
     signal leftClicked
@@ -55,7 +55,6 @@ Item {
 
         Rectangle{
             id: colorRec
-            color: Qt.rgba(Math.random(), Math.random(), Math.random(),1);
             Layout.fillHeight: true
             Layout.bottomMargin: 6
             Layout.topMargin: 6
@@ -63,6 +62,8 @@ Item {
             Layout.maximumWidth: 7
             Layout.minimumWidth: 5
             Layout.preferredWidth: 6
+
+            color: Qt.rgba(0, 0, 0, 0)
             MouseArea{
                 anchors.fill: parent
                 enabled: editable

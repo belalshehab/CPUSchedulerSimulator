@@ -10,6 +10,7 @@ ProcessesQueueModel::ProcessesQueueModel(QObject *parent)
     m_roleNames[ArrivingTimeRole] = "arrivalTime";
     m_roleNames[DurationRole] = "duration";
     m_roleNames[PriorityRole] = "priority";
+    m_roleNames[ColorRole] = "color";
 }
 
 int ProcessesQueueModel::add(const Process &process)
@@ -18,37 +19,38 @@ int ProcessesQueueModel::add(const Process &process)
 
     long long index = 0;
 
-     if(m_sortingOn == ARRIVAL) //FCFS
-     {
-         index = m_processes.rend() -  std::find_if(m_processes.rbegin(), m_processes.rend(), [=](const Process &p){
-             return p.m_arrivalTime <= process.m_arrivalTime;
-         });
-     }
-     else if(m_sortingOn == DURATION) //SJF
-     {
-         index = m_processes.rend() -  std::find_if(m_processes.rbegin(), m_processes.rend(), [=](const Process &p){
-             return p.m_duration <= process.m_duration;
-         });
-     }
+    if(m_sortingOn == ARRIVAL) //FCFS
+    {
+        index = m_processes.rend() -  std::find_if(m_processes.rbegin(), m_processes.rend(), [=](const Process &p){
+            return p.m_arrivalTime <= process.m_arrivalTime;
+        });
+    }
+    else if(m_sortingOn == DURATION) //SJF
+    {
+        index = m_processes.rend() -  std::find_if(m_processes.rbegin(), m_processes.rend(), [=](const Process &p){
+            return p.m_duration <= process.m_duration;
+        });
+    }
 
-     else if(m_sortingOn == PRIORITY) //Priority
-     {
-         index = m_processes.rend() -  std::find_if(m_processes.rbegin(), m_processes.rend(), [=](const Process &p){
-             return p.m_priority <= process.m_priority;
-         });
-     }
+    else if(m_sortingOn == PRIORITY) //Priority
+    {
+        index = m_processes.rend() -  std::find_if(m_processes.rbegin(), m_processes.rend(), [=](const Process &p){
+            return p.m_priority <= process.m_priority;
+        });
+    }
 
-     int location = static_cast<int>(index);
+    int location = static_cast<int>(index);
 
-     insert(location, process);
+    insert(location, process);
 
-     return location;
+    return location;
 }
 
-int ProcessesQueueModel::add(unsigned int arrivalTime, unsigned int duration, unsigned int priority)
+int ProcessesQueueModel::add(unsigned int arrivalTime, unsigned int duration, unsigned int priority, const QColor &color)
 {
-   Process process(++m_lastPid, arrivalTime, duration, priority);
-   return add(process);
+    Process process(++m_lastPid, arrivalTime, duration, priority);
+    process.m_color = color;
+    return add(process);
 }
 
 void ProcessesQueueModel::insert(int index, const Process &process)
@@ -125,6 +127,11 @@ bool ProcessesQueueModel::isEmpty()
     return m_processes.isEmpty();
 }
 
+void ProcessesQueueModel::setColor(int index, const QColor &color)
+{
+    m_processes[index].m_color = color;
+}
+
 void ProcessesQueueModel::setIsEmpty(bool value)
 {
     if(value == m_isEmpty)
@@ -156,6 +163,9 @@ QVariant ProcessesQueueModel::data(const QModelIndex &index, int role) const
         return m_processes[index.row()].m_duration;
     case PriorityRole:
         return m_processes[index.row()].m_priority;
+
+    case ColorRole:
+        return m_processes[index.row()].m_color;
     }
 
     return QVariant();
