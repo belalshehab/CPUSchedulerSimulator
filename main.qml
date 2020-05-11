@@ -203,7 +203,7 @@ ApplicationWindow {
                 font.weight: Font.Bold
                 font.pixelSize: 20
             }
-            GantChart {
+            GanttChart {
                 id: finishedProcesses
 
                 anchors.bottom: ganttChart.top
@@ -271,13 +271,13 @@ ApplicationWindow {
 
             Rectangle {
                 id: verticalSeparator
-                x: 307
-                width: 1
-                color: "#565656"
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 30
                 anchors.top: parent.top
                 anchors.topMargin: 20
+                x: 307
+                width: 1
+                color: "#565656"
             }
 
             ProcessDelegate {
@@ -328,7 +328,7 @@ ApplicationWindow {
                 color: schedular.currentProcess.color
             }
 
-            GantChart{
+            GanttChart{
                 id: ganttChart
                 anchors.bottomMargin: 10
                 anchors.bottom: verticalSeparator.bottom

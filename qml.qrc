@@ -9,7 +9,7 @@
         <file>ProcessesQueue.qml</file>
         <file>ProcessDelegate.qml</file>
         <file>ProccessProperty.qml</file>
-        <file>GantChart.qml</file>
+        <file>GanttChart.qml</file>
         <file>ReadyQueue.qml</file>
         <file>DeepLine.qml</file>
         <file>ProcessDetails.qml</file>
