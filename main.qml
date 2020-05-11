@@ -28,7 +28,6 @@ ApplicationWindow {
             return;
         }
 
-        //        while(!arrivingQueueModel.isEmpty)
         while(currentArivingIndex < arrivingQueueModel.count)
         {
             var p = arrivingQueueModel.get(currentArivingIndex)
@@ -79,78 +78,82 @@ ApplicationWindow {
             }
         }
 
-        RowLayout{
-            id: rowLayout
-            spacing: 50
+        Item{
+            Layout.minimumWidth: 1070
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.maximumHeight: 385
             Layout.minimumHeight: 200
             Layout.preferredHeight: 235
             Layout.fillHeight: true
             Layout.fillWidth: true
-            ProcessesQueue {
-                id: arrivalQueue
-                x: 61
-                y: 145
-                width: 470
-                height: 235
-                Layout.maximumHeight: 385
-                Layout.minimumHeight: 235
-                Layout.preferredHeight: 235
-                Layout.maximumWidth: 65000
-                Layout.minimumWidth: 500
-                Layout.preferredWidth: 500
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+            RowLayout{
+                id: rowLayout
+                anchors.fill: parent
+                spacing: 50
+                ProcessesQueue {
+                    id: arrivalQueue
+                    x: 61
+                    y: 145
+                    width: 470
+                    height: 235
+                    Layout.maximumHeight: 385
+                    Layout.minimumHeight: 235
+                    Layout.preferredHeight: 235
+                    Layout.maximumWidth: 770
+                    Layout.minimumWidth: 500
+                    Layout.preferredWidth: 500
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
-                dim: algorithms.algorithm != 3
+                    dim: algorithms.algorithm != 3
 
-                minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
-                model: arrivingQueueModel
+                    minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
+                    model: arrivingQueueModel
 
-                enableEdit: !schedular.running
-            }
+                    enableEdit: !schedular.running
+                }
 
 
-            ReadyQueue {
-                id: readyQueue
-                x: 565
-                y: 175
-                width: 235
-                height: 235
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                Layout.maximumHeight: 385
-                Layout.minimumHeight: 235
-                Layout.preferredHeight: 235
-                Layout.maximumWidth: 65000
-                Layout.minimumWidth: 235
-                Layout.preferredWidth: 235
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                model: readyQueueModel
-            }
+                ReadyQueue {
+                    id: readyQueue
+                    x: 565
+                    y: 175
+                    width: 235
+                    height: 235
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    Layout.maximumHeight: 385
+                    Layout.minimumHeight: 235
+                    Layout.preferredHeight: 235
+                    Layout.maximumWidth: 385
+                    Layout.minimumWidth: 235
+                    Layout.preferredWidth: 235
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    model: readyQueueModel
+                }
 
-            StatusBox {
-                id: statusBox
-                x: 918
-                y: 204
-                width: 235
-                height: 235
-                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                Layout.maximumHeight: 385
-                Layout.minimumHeight: 235
-                Layout.preferredHeight: 235
-                Layout.maximumWidth: 65000
-                Layout.minimumWidth: 235
-                Layout.preferredWidth: 235
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                StatusBox {
+                    id: statusBox
+                    x: 918
+                    y: 204
+                    width: 235
+                    height: 235
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    Layout.maximumHeight: 385
+                    Layout.minimumHeight: 235
+                    Layout.preferredHeight: 235
+                    Layout.maximumWidth: 385
+                    Layout.minimumWidth: 235
+                    Layout.preferredWidth: 235
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
-                averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
-                averageResponseTime: Math.round(schedular.averageResponseTime *100) /100
-                averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
+                    averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
+                    averageResponseTime: Math.round(schedular.averageResponseTime *100) /100
+                    averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
 
-                idleTime: schedular.idleTime
+                    idleTime: schedular.idleTime
+                }
             }
         }
 
@@ -168,12 +171,12 @@ ApplicationWindow {
                 height: 30
                 color: "#bababa"
 
-                text: qsTr("Gant Chartt")
+                text: qsTr("Gantt Chart")
                 anchors.verticalCenterOffset: -3
                 verticalAlignment: Text.AlignVCenter
                 anchors.right: verticalSeparator.left
                 anchors.rightMargin: 30
-                anchors.verticalCenter: gantChart.verticalCenter
+                anchors.verticalCenter: ganttChart.verticalCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.weight: Font.Bold
                 font.pixelSize: 20
@@ -203,9 +206,9 @@ ApplicationWindow {
             GantChart {
                 id: finishedProcesses
 
-                anchors.bottom: gantChart.top
-                anchors.right: gantChart.right
-                anchors.left: gantChart.left
+                anchors.bottom: ganttChart.top
+                anchors.right: ganttChart.right
+                anchors.left: ganttChart.left
                 anchors.bottomMargin: 20
 
                 clickable: true
@@ -278,12 +281,8 @@ ApplicationWindow {
             }
 
             ProcessDelegate {
-                id: currentProcessDelegate
-
-//                anchors.left: currentProcessLabel.right
-//                anchors.leftMargin: 20
+                id: currentProcessDelegate       
                 x: 530
-//                anchors.verticalCenter: controlBox.verticalCenter
                 y: 44
 
                 width: 210
@@ -292,35 +291,35 @@ ApplicationWindow {
                 visible: !schedular.idle
 
                 property int animationDuration: 150
-               onPidChanged: {
+                onPidChanged: {
                     animatY.start()
-                   animatX.start()
-                   animatOpacity.start()
+                    animatX.start()
+                    animatOpacity.start()
                 }
 
-               NumberAnimation on opacity{
-                   id: animatOpacity
-                   from: 0
-                   to: 1
-                   duration: currentProcessDelegate.animationDuration
-                   easing.type: Easing.InOutQuad
-               }
+                NumberAnimation on opacity{
+                    id: animatOpacity
+                    from: 0
+                    to: 1
+                    duration: currentProcessDelegate.animationDuration
+                    easing.type: Easing.InOutQuad
+                }
 
-               NumberAnimation on y{
-                   id: animatY
-                   from: 0
-                   to: 44
-                   duration: currentProcessDelegate.animationDuration
-                   easing.type: Easing.InOutQuad
-               }
+                NumberAnimation on y{
+                    id: animatY
+                    from: 0
+                    to: 44
+                    duration: currentProcessDelegate.animationDuration
+                    easing.type: Easing.InOutQuad
+                }
 
-               NumberAnimation on x{
-                   id: animatX
-                   from: currentProcessDelegate.width + 530
-                   to: 530
-                   duration: currentProcessDelegate.animationDuration
-                   easing.type: Easing.InOutQuad
-               }
+                NumberAnimation on x{
+                    id: animatX
+                    from: currentProcessDelegate.width + 530
+                    to: 530
+                    duration: currentProcessDelegate.animationDuration
+                    easing.type: Easing.InOutQuad
+                }
 
                 pid: schedular.currentProcess.pid
                 arrivalTime: schedular.currentProcess.arrivalTime
@@ -330,8 +329,7 @@ ApplicationWindow {
             }
 
             GantChart{
-                id: gantChart
-                y: 197
+                id: ganttChart
                 anchors.bottomMargin: 10
                 anchors.bottom: verticalSeparator.bottom
                 anchors.left: verticalSeparator.right
@@ -343,14 +341,15 @@ ApplicationWindow {
             }
 
             Label {
-                x: 80
-                height: 30
-                color: "#bababa"
-                text: schedular.currentTime
                 anchors.top: controlBox.bottom
                 anchors.topMargin: 5
                 anchors.right: controlBox.right
-                anchors.rightMargin: 0
+
+                height: 30
+
+                text: schedular.currentTime
+                color: "#bababa"
+
                 font.weight: Font.Bold
                 font.pixelSize: 20
                 verticalAlignment: Text.AlignVCenter
@@ -359,17 +358,16 @@ ApplicationWindow {
 
             Label {
                 id: currentProcessLabel
-                y: 54
+                anchors.left: ganttChart.left
+                anchors.verticalCenter: controlBox.verticalCenter
+
                 width: 172
                 height: 30
-                color: "#bababa"
+
                 text: qsTr("Current Process")
-                anchors.left: gantChart.left
-                anchors.leftMargin: 0
+                color: "#bababa"
                 verticalAlignment: Text.AlignVCenter
-                anchors.verticalCenterOffset: 0
                 font.weight: Font.Bold
-                anchors.verticalCenter: controlBox.verticalCenter
                 horizontalAlignment: Text.AlignLeft
                 font.pixelSize: 20
             }
@@ -377,7 +375,7 @@ ApplicationWindow {
             Rectangle {
                 id: horizontalSeparator
                 anchors.verticalCenter: controlBox.bottom
-                anchors.left: gantChart.left
+                anchors.left: ganttChart.left
                 anchors.right: parent.right
 
                 height: 1
@@ -453,23 +451,16 @@ ApplicationWindow {
 
 
 
-
     ProcessesQueueModel{
         id: arrivingQueueModel
         sortingOn: ProcessesQueueModel.ARRIVAL
     }
 
 
-
-
     ProcessesQueueModel{
         id: readyQueueModel
         sortingOn: ProcessesQueueModel.ARRIVAL
     }
-
-
-
-
 
     ListModel{
         id: finishedProcessesModel
@@ -482,15 +473,3 @@ ApplicationWindow {
         height: 400
     }
 }
-
-/*##^##
-Designer {
-    D{i:2;anchors_width:138;anchors_x:370;anchors_y:93}D{i:5;anchors_width:138;anchors_x:370}
-D{i:6;anchors_width:138;anchors_x:7}D{i:3;anchors_width:138;anchors_x:370}D{i:8;anchors_x:"-98";anchors_y:63}
-D{i:9;anchors_x:7}D{i:10;anchors_width:770;anchors_x:7;anchors_y:494}D{i:12;anchors_y:461}
-D{i:14;anchors_x:530}D{i:15;anchors_width:770;anchors_x:19;anchors_y:544}D{i:16;anchors_width:770;anchors_x:314;anchors_y:544}
-D{i:17;anchors_width:770;anchors_x:314;anchors_y:494}D{i:18;anchors_width:770;anchors_x:"-98";anchors_y:63}
-D{i:1;anchors_height:100;anchors_width:138;anchors_x:19;anchors_y:93}D{i:19;anchors_height:200;anchors_width:770;anchors_x:19;anchors_y:63}
-D{i:20;anchors_height:200;anchors_width:179;anchors_x:7;anchors_y:449}
-}
-##^##*/
