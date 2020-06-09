@@ -2,7 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "processes_queue_model.h"
-#include "schedular.h"
+#include "scheduler.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 
-    qmlRegisterType<ProcessesQueueModel>("schedular", 0, 1, "ProcessesQueueModel");
-    qmlRegisterType<Schedular>("schedular", 0, 1, "Schedular");
+    qmlRegisterType<ProcessesQueueModel>("scheduler", 0, 1, "ProcessesQueueModel");
+    qmlRegisterType<Scheduler>("scheduler", 0, 1, "Scheduler");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

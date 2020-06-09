@@ -1,4 +1,4 @@
-#include "schedular.h"
+#include "scheduler.h"
 #include <algorithm>
 
 #include <QVariant>
@@ -6,7 +6,7 @@
 
 #include <QDebug>
 
-Schedular::Schedular(QObject *parent): QObject{parent},
+Scheduler::Scheduler(QObject *parent): QObject{parent},
     m_algorithmId{FCFS}, m_preemptive{false}, m_quanta{0},
     m_currentTime(0), m_currentProcess{0, 0, 0, 0},
     m_running{false}, m_paused{true}, m_idle{true},
@@ -23,7 +23,7 @@ Schedular::Schedular(QObject *parent): QObject{parent},
     };
 }
 
-int Schedular::enqueueArrivedProccess(const Process &process)
+int Scheduler::enqueueArrivedProccess(const Process &process)
 {
     if(process.m_arrivalTime > m_currentTime)
     {
@@ -59,7 +59,7 @@ int Schedular::enqueueArrivedProccess(const Process &process)
     return location;
 }
 
-void Schedular::reset()
+void Scheduler::reset()
 {
     m_readyQueue.clear();
     m_finishedProcesses.clear();
@@ -80,25 +80,25 @@ void Schedular::reset()
     m_currentQuanta = m_quanta;
 }
 
-void Schedular::pause()
+void Scheduler::pause()
 {
     m_timer.stop();
     setPaused(true);
 }
 
-void Schedular::stop()
+void Scheduler::stop()
 {
     m_timer.start(0);
 }
 
 
-void Schedular::startSolving()
+void Scheduler::startSolving()
 {
     m_timer.start(m_delay);
     setPaused(false);
 }
 
-void Schedular::solve()
+void Scheduler::solve()
 {
     setRunning(true);
     m_timer.start(m_delay);
@@ -108,7 +108,7 @@ void Schedular::solve()
     }
 }
 
-bool Schedular::step()
+bool Scheduler::step()
 {
     if(!m_running)
     {
@@ -174,7 +174,7 @@ bool Schedular::step()
 }
 
 
-void Schedular::runReadyProcess()
+void Scheduler::runReadyProcess()
 {
     if(m_readyQueue.empty())
         return;
@@ -195,7 +195,7 @@ void Schedular::runReadyProcess()
     m_currentQuanta = m_quanta;
 }
 
-void Schedular::stopCurrentProcess()
+void Scheduler::stopCurrentProcess()
 {
     if(m_currentProcess.m_pid == 0)
     {
@@ -228,12 +228,12 @@ void Schedular::stopCurrentProcess()
     }
 }
 
-float Schedular::averageResponseTime() const
+float Scheduler::averageResponseTime() const
 {
     return m_averageResponseTime;
 }
 
-void Schedular::setAverageResponseTime(float averageResponseTime)
+void Scheduler::setAverageResponseTime(float averageResponseTime)
 {
     if(m_averageResponseTime == averageResponseTime)
         return;
@@ -242,12 +242,12 @@ void Schedular::setAverageResponseTime(float averageResponseTime)
     emit averageResponseTimeChanged();
 }
 
-float Schedular::averageTurnaroundTime() const
+float Scheduler::averageTurnaroundTime() const
 {
     return m_averageTurnaroundTime;
 }
 
-void Schedular::setAverageTurnaroundTime(float averageTurnaroundTime)
+void Scheduler::setAverageTurnaroundTime(float averageTurnaroundTime)
 {
     if(m_averageTurnaroundTime == averageTurnaroundTime)
         return;
@@ -256,12 +256,12 @@ void Schedular::setAverageTurnaroundTime(float averageTurnaroundTime)
     emit averageTurnaroundTimeChanged();
 }
 
-unsigned int Schedular::idleTime() const
+unsigned int Scheduler::idleTime() const
 {
     return m_idleTime;
 }
 
-void Schedular::setIdleTime(unsigned int idleTime)
+void Scheduler::setIdleTime(unsigned int idleTime)
 {
     if(m_idleTime == idleTime)
         return;
@@ -270,12 +270,12 @@ void Schedular::setIdleTime(unsigned int idleTime)
     emit idleTimeChanged();
 }
 
-float Schedular::averageWaitingTime() const
+float Scheduler::averageWaitingTime() const
 {
     return m_averageWaitingTime;
 }
 
-void Schedular::setAverageWaitingTime(float averageWaitingTime)
+void Scheduler::setAverageWaitingTime(float averageWaitingTime)
 {
     if(m_averageWaitingTime == averageWaitingTime)
         return;
@@ -284,12 +284,12 @@ void Schedular::setAverageWaitingTime(float averageWaitingTime)
     emit averageWaitingTimeChanged();
 }
 
-bool Schedular::idle() const
+bool Scheduler::idle() const
 {
     return m_idle;
 }
 
-void Schedular::setIdle(bool idle)
+void Scheduler::setIdle(bool idle)
 {
     if(m_idle == idle)
         return;
@@ -298,28 +298,28 @@ void Schedular::setIdle(bool idle)
     emit idleChanged();
 }
 
-QVariant Schedular::readyQueue() const
+QVariant Scheduler::readyQueue() const
 {
     return QVariant::fromValue(QList<Process>::fromVector(m_readyQueue));
 }
 
-Process Schedular::getFinishedProcess(int index) const
+Process Scheduler::getFinishedProcess(int index) const
 {
     return m_finishedProcesses.at(index);
 }
 
-Process Schedular::lastFinishedProcess() const
+Process Scheduler::lastFinishedProcess() const
 {
     return m_finishedProcesses.last();
 }
 
 
-bool Schedular::isArrivingQueueEmpty() const
+bool Scheduler::isArrivingQueueEmpty() const
 {
     return m_isArrivingQueueEmpty;
 }
 
-void Schedular::setIsArrivingQueueEmpty(bool isArrivingQueueEmpty)
+void Scheduler::setIsArrivingQueueEmpty(bool isArrivingQueueEmpty)
 {
     if(m_isArrivingQueueEmpty == isArrivingQueueEmpty)
         return;
@@ -328,12 +328,12 @@ void Schedular::setIsArrivingQueueEmpty(bool isArrivingQueueEmpty)
     emit isArrivingQueueEmptyChanged();
 }
 
-bool Schedular::running() const
+bool Scheduler::running() const
 {
     return m_running;
 }
 
-void Schedular::setRunning(bool running)
+void Scheduler::setRunning(bool running)
 {
     if(m_running == running)
         return;
@@ -342,12 +342,12 @@ void Schedular::setRunning(bool running)
     emit runningChanged();
 }
 
-Schedular::AlgorithmId Schedular::algorithmId() const
+Scheduler::AlgorithmId Scheduler::algorithmId() const
 {
     return m_algorithmId;
 }
 
-void Schedular::setAlgorithmId(AlgorithmId algorithmId)
+void Scheduler::setAlgorithmId(AlgorithmId algorithmId)
 {
     if(m_algorithmId == algorithmId)
         return;
@@ -384,12 +384,12 @@ void Schedular::setAlgorithmId(AlgorithmId algorithmId)
     }
 }
 
-int Schedular::quanta() const
+int Scheduler::quanta() const
 {
     return m_quanta;
 }
 
-void Schedular::setQuanta(int quanta)
+void Scheduler::setQuanta(int quanta)
 {
     if(m_quanta == quanta)
         return;
@@ -398,12 +398,12 @@ void Schedular::setQuanta(int quanta)
     emit quantaChanged();
 }
 
-Process Schedular::currentProcess() const
+Process Scheduler::currentProcess() const
 {
     return m_currentProcess;
 }
 
-void Schedular::setCurrentProcess(const Process &currentProcess)
+void Scheduler::setCurrentProcess(const Process &currentProcess)
 {
     if(m_currentProcess.m_pid == currentProcess.m_pid)
     {
@@ -415,12 +415,12 @@ void Schedular::setCurrentProcess(const Process &currentProcess)
     emit currentProcessDataChanged();
 }
 
-unsigned int Schedular::currentTime() const
+unsigned int Scheduler::currentTime() const
 {
     return m_currentTime;
 }
 
-void Schedular::setCurrentTime(unsigned int currentTime)
+void Scheduler::setCurrentTime(unsigned int currentTime)
 {
     if(currentTime == m_currentTime)
         return;
@@ -429,12 +429,12 @@ void Schedular::setCurrentTime(unsigned int currentTime)
     emit currentTimeChanged();
 }
 
-bool Schedular::paused() const
+bool Scheduler::paused() const
 {
     return m_paused;
 }
 
-void Schedular::setPaused(bool paused)
+void Scheduler::setPaused(bool paused)
 {
     if(paused == m_paused)
         return;
@@ -443,12 +443,12 @@ void Schedular::setPaused(bool paused)
     emit pausedChanged();
 }
 
-int Schedular::delay() const
+int Scheduler::delay() const
 {
     return m_delay;
 }
 
-void Schedular::setDelay(int delay)
+void Scheduler::setDelay(int delay)
 {
     if(m_delay == delay)
         return;
@@ -460,12 +460,12 @@ void Schedular::setDelay(int delay)
     emit delayChanged();
 }
 
-bool Schedular::preemptive() const
+bool Scheduler::preemptive() const
 {
     return m_preemptive;
 }
 
-void Schedular::setPreemptive(bool preemptive)
+void Scheduler::setPreemptive(bool preemptive)
 {
     if(m_preemptive == preemptive)
         return;
@@ -474,12 +474,12 @@ void Schedular::setPreemptive(bool preemptive)
     emit preemptiveChanged();
 }
 
-QVector<Schedular::GantChart> Schedular::gantChart() const
+QVector<Scheduler::GantChart> Scheduler::gantChart() const
 {
     return m_gantChart;
 }
 
-QVector<Process> Schedular::finishedProcesses() const
+QVector<Process> Scheduler::finishedProcesses() const
 {
     return m_finishedProcesses;
 }

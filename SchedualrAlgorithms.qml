@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
-import schedular 0.1
+import scheduler 0.1
 
 GrayRectangle {
     id: schedualrAlgorithms
@@ -11,7 +11,7 @@ GrayRectangle {
 
     readonly property alias preemptive: preemptiveCheckBox.checked
     readonly property alias quanta: quantaSelector.value
-    property int algorithm : Schedular.FCFS
+    property int algorithm : Scheduler.FCFS
 
     RowLayout {
         id: buttonsColumn
@@ -45,7 +45,7 @@ GrayRectangle {
             onClicked: {
                 preemptiveCheckBox.checked = false
                 preemptiveCheckBox.enabled = false
-                algorithm = Schedular.FCFS
+                algorithm = Scheduler.FCFS
             }
         }
 
@@ -56,7 +56,7 @@ GrayRectangle {
             Layout.fillWidth: false
             onClicked: {
                 preemptiveCheckBox.enabled = true
-                algorithm = Schedular.SJF
+                algorithm = Scheduler.SJF
             }
         }
         AlgorithmButton {
@@ -67,7 +67,7 @@ GrayRectangle {
 
             onClicked: {
                 preemptiveCheckBox.enabled = true
-                algorithm = Schedular.PRIORITY
+                algorithm = Scheduler.PRIORITY
             }
         }
         AlgorithmButton {
@@ -80,7 +80,7 @@ GrayRectangle {
             onClicked: {
                 preemptiveCheckBox.checked = true
                 preemptiveCheckBox.enabled = false
-                algorithm = Schedular.RR
+                algorithm = Scheduler.RR
             }
         }
 

@@ -17,7 +17,7 @@ SOURCES += \
         main.cpp \
         process.cpp \
         processes_queue_model.cpp \
-        schedular.cpp
+        scheduler.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,6 +35,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     process.h \
     processes_queue_model.h \
-    schedular.h
+    scheduler.h
 
 DISTFILES +=

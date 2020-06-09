@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-import schedular 0.1
+import scheduler 0.1
 
 
 ApplicationWindow {
@@ -14,7 +14,7 @@ ApplicationWindow {
 
     color: "#333333"
 
-    title: "CPU schedular"
+    title: "CPU scheduler"
 
     property int currentArivingIndex: 0
 
@@ -23,17 +23,17 @@ ApplicationWindow {
         var readyQueueIndex;
         if(current)
         {
-            readyQueueIndex = schedular.enqueueArrivedProccess(schedular.currentProcess)
-            readyQueueModel.insert(readyQueueIndex, schedular.currentProcess)
+            readyQueueIndex = scheduler.enqueueArrivedProccess(scheduler.currentProcess)
+            readyQueueModel.insert(readyQueueIndex, scheduler.currentProcess)
             return;
         }
 
         while(currentArivingIndex < arrivingQueueModel.count)
         {
             var p = arrivingQueueModel.get(currentArivingIndex)
-            schedular.currentProcess.color = p.color
+            scheduler.currentProcess.color = p.color
 
-            readyQueueIndex = schedular.enqueueArrivedProccess(p)
+            readyQueueIndex = scheduler.enqueueArrivedProccess(p)
             if(readyQueueIndex < 0)
             {
                 break;
@@ -60,16 +60,16 @@ ApplicationWindow {
             Layout.preferredHeight: 70
             Layout.fillWidth: true
 
-            enabled: !schedular.running
+            enabled: !scheduler.running
 
 
             onAlgorithmChanged: {
                 switch(algorithms.algorithm)
                 {
-                case Schedular.SJF:
+                case Scheduler.SJF:
                     readyQueueModel.sortingOn = ProcessesQueueModel.DURATION
                     break;
-                case Schedular.PRIORITY:
+                case Scheduler.PRIORITY:
                     readyQueueModel.sortingOn = ProcessesQueueModel.PRIORITY
                     break;
                 default:
@@ -107,10 +107,10 @@ ApplicationWindow {
 
                     dim: algorithms.algorithm != 3
 
-                    minimumArrivingTime: Schedular.running ? schedular.currentTime +1 : 0
+                    minimumArrivingTime: Scheduler.running ? scheduler.currentTime +1 : 0
                     model: arrivingQueueModel
 
-                    enableEdit: !schedular.running
+                    enableEdit: !scheduler.running
                 }
 
 
@@ -148,11 +148,11 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    averageTurnaroundTime: Math.round(schedular.averageTurnaroundTime *100) /100
-                    averageResponseTime: Math.round(schedular.averageResponseTime *100) /100
-                    averageWaitingTime: Math.round(schedular.averageWaitingTime *100) /100
+                    averageTurnaroundTime: Math.round(scheduler.averageTurnaroundTime *100) /100
+                    averageResponseTime: Math.round(scheduler.averageResponseTime *100) /100
+                    averageWaitingTime: Math.round(scheduler.averageWaitingTime *100) /100
 
-                    idleTime: schedular.idleTime
+                    idleTime: scheduler.idleTime
                 }
             }
         }
@@ -217,7 +217,7 @@ ApplicationWindow {
                 onClick: {
                     processDetails.open()
 
-                    var process = schedular.getFinishedProcess(index)
+                    var process = scheduler.getFinishedProcess(index)
                     processDetails.pid = "Process " + process.pid
                     processDetails.arrivalTime = process.arrivalTime
                     processDetails.duration = process.originalDuration
@@ -241,27 +241,27 @@ ApplicationWindow {
                 anchors.rightMargin: 30
 
                 enabled: !arrivingQueueModel.isEmpty
-                isRunning: schedular.running
-                isPaused: schedular.paused
+                isRunning: scheduler.running
+                isPaused: scheduler.paused
                 onStartClicked:
                 {
-                    if(schedular.paused)
+                    if(scheduler.paused)
                     {
-                        schedular.startSolving()
+                        scheduler.startSolving()
                     }
                     else
                     {
-                        schedular.pause()
+                        scheduler.pause()
                     }
 
 
                 }
-                onStepClicked: schedular.step()
+                onStepClicked: scheduler.step()
 
                 onStopClicked: {
-                    if(schedular.running)
+                    if(scheduler.running)
                     {
-                        schedular.stop()
+                        scheduler.stop()
                     }
                 }
             }
@@ -288,7 +288,7 @@ ApplicationWindow {
                 width: 210
                 height: 30
 
-                visible: !schedular.idle
+                visible: !scheduler.idle
 
                 property int animationDuration: 150
                 onPidChanged: {
@@ -321,11 +321,11 @@ ApplicationWindow {
                     easing.type: Easing.InOutQuad
                 }
 
-                pid: schedular.currentProcess.pid
-                arrivalTime: schedular.currentProcess.arrivalTime
-                duration: schedular.currentProcess.duration
-                priority: schedular.currentProcess.priority
-                color: schedular.currentProcess.color
+                pid: scheduler.currentProcess.pid
+                arrivalTime: scheduler.currentProcess.arrivalTime
+                duration: scheduler.currentProcess.duration
+                priority: scheduler.currentProcess.priority
+                color: scheduler.currentProcess.color
             }
 
             GanttChart{
@@ -347,7 +347,7 @@ ApplicationWindow {
 
                 height: 30
 
-                text: schedular.currentTime
+                text: scheduler.currentTime
                 color: "#bababa"
 
                 font.weight: Font.Bold
@@ -386,8 +386,8 @@ ApplicationWindow {
     }
 
 
-    Schedular{
-        id: schedular
+    Scheduler{
+        id: scheduler
         delay: controlBox.speed *500
         preemptive: algorithms.preemptive
         quanta: algorithms.quanta
@@ -414,9 +414,9 @@ ApplicationWindow {
             }
             else
             {
-                gantChartModel.append({name: "P" + schedular.currentProcess.pid, width: 0,  time: currentTime,
-                                          r: schedular.currentProcess.color.r,   g: schedular.currentProcess.color.g,
-                                          b: schedular.currentProcess.color.b,   a: schedular.currentProcess.color.a})
+                gantChartModel.append({name: "P" + scheduler.currentProcess.pid, width: 0,  time: currentTime,
+                                          r: scheduler.currentProcess.color.r,   g: scheduler.currentProcess.color.g,
+                                          b: scheduler.currentProcess.color.b,   a: scheduler.currentProcess.color.a})
             }
         }
 
@@ -443,8 +443,8 @@ ApplicationWindow {
         onFinishedProcessesChanged: {
             var x = lastFinishedProcess()
             finishedProcessesModel.append({"name": "P" + x.pid, "width": x.originalDuration *20 ,  "time": currentTime,
-                                              r: schedular.currentProcess.color.r,   g: schedular.currentProcess.color.g,
-                                              b: schedular.currentProcess.color.b,   a: schedular.currentProcess.color.a})
+                                              r: scheduler.currentProcess.color.r,   g: scheduler.currentProcess.color.g,
+                                              b: scheduler.currentProcess.color.b,   a: scheduler.currentProcess.color.a})
         }
 
     }

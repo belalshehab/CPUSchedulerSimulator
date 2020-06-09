@@ -1,5 +1,5 @@
-#ifndef SCHEDULAR_H
-#define SCHEDULAR_H
+#ifndef SCHEDULER_H
+#define SCHEDULER_H
 #include <queue>
 #include <functional>
 
@@ -10,7 +10,7 @@
 
 #include "process.h"
 
-class Schedular: public QObject
+class Scheduler: public QObject
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ public:
       FCFS = 1, SJF = 2, PRIORITY = 3, RR = 4
     };
 public:
-    explicit Schedular(QObject *parent = nullptr);
+    explicit Scheduler(QObject *parent = nullptr);
 
     void solve();
 
@@ -173,4 +173,4 @@ private:
     QTimer m_timer;
 };
 
-#endif // SCHEDULAR_H
+#endif // SCHEDULER_H
